@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #f0f4f8;
       --surface: #ffffff;
@@ -25,184 +24,188 @@
       --radius: 14px;
       --shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+    /* PIN */
+    #pin-screen {
+      position: fixed; inset: 0; background: var(--primary);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 1000; gap: 24px;
     }
-
-    .header {
-      background: var(--primary);
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
+    .pin-logo { color: #fff; font-size: 22px; font-weight: 700; text-align: center; }
+    .pin-logo span { display: block; font-size: 13px; font-weight: 400; opacity: 0.7; margin-top: 4px; }
+    .pin-dots { display: flex; gap: 14px; }
+    .pin-dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.6);
+      background: transparent; transition: background 0.15s;
+    }
+    .pin-dot.filled { background: #fff; border-color: #fff; }
+    .pin-error { color: rgba(255,100,100,0.9); font-size: 13px; font-weight: 500; height: 18px; }
+    .pin-grid {
+      display: grid; grid-template-columns: repeat(3, 72px);
       gap: 12px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    }
+    .pin-btn {
+      height: 72px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1); color: #fff;
+      font-family: inherit; font-size: 22px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .pin-btn:active { background: rgba(255,255,255,0.25); }
+    .pin-btn.del { font-size: 18px; }
+    .pin-btn.empty { border: none; background: transparent; cursor: default; }
+
+    /* OVERLAY CARGA */
+    #overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      display: none; align-items: center; justify-content: center;
+      z-index: 500; flex-direction: column; gap: 14px;
+    }
+    #overlay.visible { display: flex; }
+    .overlay-spinner {
+      width: 44px; height: 44px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    .overlay-msg { color: #fff; font-size: 15px; font-weight: 600; }
+
+    /* HEADER */
+    .header {
+      background: var(--primary); padding: 18px 20px;
+      display: flex; align-items: center; gap: 10px;
+      position: sticky; top: 0; z-index: 100;
       box-shadow: 0 2px 8px rgba(24,71,200,0.3);
     }
     .header-back {
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      display: none;
-      background: none;
-      border: none;
-      padding: 0 8px 0 0;
-      line-height: 1;
+      color: #fff; font-size: 26px; cursor: pointer;
+      display: none; background: none; border: none;
+      padding: 0 8px 0 0; line-height: 1; flex-shrink: 0;
     }
     .header-title { color: #fff; font-size: 17px; font-weight: 700; }
     .header-sub { color: rgba(255,255,255,0.7); font-size: 12px; }
 
+    /* APP */
+    #app { display: none; }
+
+    /* SEARCH */
     .search-wrap { padding: 20px 16px 12px; }
     .search-box {
-      display: flex;
-      gap: 10px;
+      display: flex; gap: 10px;
       background: var(--surface);
       border: 1.5px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      align-items: center;
-      box-shadow: var(--shadow);
+      border-radius: 12px; padding: 10px 14px;
+      align-items: center; box-shadow: var(--shadow);
       transition: border-color 0.2s;
     }
     .search-box:focus-within { border-color: var(--primary); }
     .search-box input {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-family: inherit;
-      font-size: 15px;
-      color: var(--text);
-      background: transparent;
+      flex: 1; border: none; outline: none;
+      font-family: inherit; font-size: 15px;
+      color: var(--text); background: transparent;
     }
     .search-box input::placeholder { color: var(--text-muted); }
-    .btn-search {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 9px;
-      padding: 8px 18px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      white-space: nowrap;
+    .btn-clear {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 18px; padding: 0 4px;
+      display: none; line-height: 1;
     }
-    .btn-search:hover { background: #1339a8; }
+    .btn-search {
+      background: var(--primary); color: #fff; border: none;
+      border-radius: 9px; padding: 8px 18px;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+    }
     .btn-search:disabled { background: #9ab0e8; cursor: not-allowed; }
 
+    /* DASHBOARD */
+    .dashboard { padding: 0 16px 8px; }
+    .dash-titulo {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .dash-card {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 14px; box-shadow: var(--shadow); border: 1.5px solid var(--border);
+    }
+    .dash-card.full { grid-column: 1 / -1; }
+    .dash-card-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .dash-card-valor { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .dash-card-valor.danger { color: var(--danger); }
+    .dash-card-valor.success { color: var(--success); }
+    .progress-wrap { background: var(--border); border-radius: 6px; height: 8px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 6px; transition: width 1s ease; }
+    .progress-bar.success { background: var(--success); }
+    .progress-bar.warning { background: var(--warning); }
+    .progress-bar.danger { background: var(--danger); }
+    .dash-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+    /* CONTENT */
     .content { padding: 0 16px 32px; }
-
-    .estado-msg {
-      text-align: center;
-      padding: 48px 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-    .estado-msg .icon { font-size: 40px; margin-bottom: 10px; }
-
+    .estado-msg { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 14px; }
+    .estado-msg .icon { font-size: 36px; margin-bottom: 10px; }
     .error-msg {
-      background: var(--danger-light);
-      color: var(--danger);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: 8px;
+      background: var(--danger-light); color: var(--danger);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 14px; font-weight: 500; margin-top: 8px;
     }
 
-    /* LISTA DE CLIENTES */
+    /* LISTA CLIENTES */
     .lista-titulo {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      margin: 8px 0 10px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--text-muted); margin: 8px 0 10px;
     }
     .cliente-item {
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+      cursor: pointer; box-shadow: var(--shadow);
+      display: flex; justify-content: space-between; align-items: center;
       transition: border-color 0.15s;
     }
-    .cliente-item:hover { border-color: var(--primary); }
+    .cliente-item:active { border-color: var(--primary); background: var(--primary-light); }
     .cliente-item-nombre { font-size: 15px; font-weight: 600; color: var(--text); }
     .cliente-item-ruc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .cliente-item-arrow { color: var(--primary); font-size: 18px; }
+    .cliente-item-total { font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+    .cliente-item-arrow { color: var(--primary); font-size: 20px; flex-shrink: 0; }
 
-    /* CARD CLIENTE */
+    /* CLIENTE CARD */
     .cliente-card {
-      background: var(--primary);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 20px;
-      color: #fff;
+      background: var(--primary); border-radius: var(--radius);
+      padding: 20px; margin-bottom: 20px; color: #fff;
     }
     .cliente-nombre { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
-    .cliente-ruc { font-size: 12px; opacity: 0.75; margin-bottom: 16px; }
-    .saldo-global-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      opacity: 0.8;
-      margin-bottom: 4px;
-    }
+    .cliente-ruc { font-size: 12px; opacity: 0.75; margin-bottom: 6px; }
+    .cliente-total-comprado { font-size: 12px; opacity: 0.85; margin-bottom: 14px; }
+    .saldo-global-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.8; margin-bottom: 4px; }
     .saldo-global-monto { font-size: 28px; font-weight: 700; }
     .saldo-global-monto.cero { opacity: 0.6; }
 
     .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-bottom: 10px;
     }
     .badge-pendiente { background: var(--warning-light); color: var(--warning); }
     .badge-mora { background: var(--danger-light); color: var(--danger); }
     .badge-pagado { background: var(--success-light); color: var(--success); }
 
     .seccion-titulo {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      margin: 20px 0 10px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px;
     }
 
-    /* FACTURA CARD */
+    /* FACTURA */
     .factura-card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 14px;
-      overflow: hidden;
-      border: 1.5px solid var(--border);
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 14px;
+      overflow: hidden; border: 1.5px solid var(--border);
     }
     .factura-header {
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      cursor: pointer;
-      user-select: none;
-      gap: 10px;
+      padding: 14px 16px; display: flex; justify-content: space-between;
+      align-items: flex-start; cursor: pointer; user-select: none; gap: 10px;
     }
     .factura-header:active { background: #f8fafc; }
     .factura-info { flex: 1; min-width: 0; }
@@ -214,44 +217,23 @@
     .factura-saldo { font-size: 15px; font-weight: 700; color: var(--text); }
     .factura-saldo.pagado { color: var(--success); }
     .factura-saldo-total { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .factura-chevron {
-      font-size: 18px;
-      color: var(--text-muted);
-      transition: transform 0.25s;
-      margin-top: 2px;
-    }
+    .factura-chevron { font-size: 18px; color: var(--text-muted); transition: transform 0.25s; margin-top: 2px; }
     .factura-card.abierta .factura-chevron { transform: rotate(180deg); }
 
     .cuotas-wrap { display: none; border-top: 1.5px solid var(--border); }
     .factura-card.abierta .cuotas-wrap { display: block; }
-
     .cuotas-subtitulo {
-      padding: 10px 16px 6px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: var(--text-muted);
+      padding: 10px 16px 6px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted);
     }
-
     .cuota-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 16px;
-      border-top: 1px solid var(--border);
-      gap: 8px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px; border-top: 1px solid var(--border); gap: 8px;
     }
     .cuota-izq { flex: 1; min-width: 0; }
     .cuota-num { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
     .cuota-fecha { font-size: 12px; color: var(--text-muted); }
-    .cuota-mora {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 10px;
-      white-space: nowrap;
-    }
+    .cuota-mora { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
     .cuota-mora.en-mora { background: var(--danger-light); color: var(--danger); }
     .cuota-mora.al-dia { background: var(--success-light); color: var(--success); }
     .cuota-mora.proximo { background: var(--warning-light); color: var(--warning); }
@@ -261,78 +243,126 @@
     .cuota-importe { font-size: 11px; color: var(--text-muted); }
 
     .historial-toggle {
-      background: none;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 16px;
-      width: 100%;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      background: none; border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 10px 16px; width: 100%; font-family: inherit; font-size: 13px;
+      font-weight: 600; color: var(--text-muted); cursor: pointer; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
 
-    .spinner {
-      display: inline-block;
-      width: 20px; height: 20px;
-      border: 3px solid rgba(24,71,200,0.2);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
+    .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(24,71,200,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 48px 20px;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <button class="header-back" id="btnVolver" onclick="volverALista()">‹</button>
-  <div>
-    <div class="header-title" id="headerTitle">Cuentas a Cobrar</div>
-    <div class="header-sub">TECH MARKET</div>
+<!-- PIN -->
+<div id="pin-screen">
+  <div class="pin-logo">🏪 TECH MARKET<span>Cuentas a Cobrar</span></div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn empty"></button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn del" onclick="pinDel()">⌫</button>
   </div>
 </div>
 
-<div class="search-wrap" id="searchWrap">
-  <div class="search-box">
-    <input type="text" id="inputBuscar" placeholder="Nombre o RUC del cliente..." autocomplete="off" />
-    <button class="btn-search" id="btnBuscar" onclick="buscarClientes()">Buscar</button>
-  </div>
+<!-- OVERLAY -->
+<div id="overlay">
+  <div class="overlay-spinner"></div>
+  <div class="overlay-msg" id="overlay-msg">Cargando...</div>
 </div>
 
-<div class="content" id="content">
-  <div class="estado-msg">
-    <div class="icon">🔍</div>
-    Buscá un cliente para ver su estado de cuenta
+<!-- APP -->
+<div id="app">
+  <div class="header">
+    <button class="header-back" id="btnVolver" onclick="volverALista()">‹</button>
+    <div>
+      <div class="header-title" id="headerTitle">Cuentas a Cobrar</div>
+      <div class="header-sub">TECH MARKET</div>
+    </div>
+  </div>
+
+  <div id="searchWrap" class="search-wrap">
+    <div class="search-box">
+      <input type="text" id="inputBuscar" placeholder="Nombre o RUC del cliente..." autocomplete="off" />
+      <button class="btn-clear" id="btnClear" onclick="limpiarBusqueda()">✕</button>
+      <button class="btn-search" id="btnBuscar" onclick="buscarClientes()">Buscar</button>
+    </div>
+  </div>
+
+  <div id="dashboard" class="dashboard"></div>
+  <div class="content" id="content">
+    <div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>
   </div>
 </div>
 
 <script>
-  const API = 'https://script.google.com/macros/s/AKfycbwAH6aDdW0r9MUS941_kcQzeT3xVnncAE8suGLvzxaKmUe2gHLEg0XwUQ6MYTQx-pw5/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbxdLbaFL-btGf1uCu8f_z4w8QRoMqRBQWPGXQLm8oMjQHKGWY1TehrKGarM_bj4--d4/exec';
+  const PIN_CORRECTO = '2011';
+  var pinActual = '';
+  var ultimaBusqueda = '';
 
-  document.getElementById('inputBuscar').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') buscarClientes();
-  });
+  // ── PIN ──────────────────────────────────────────────────────────────────
+  function pinPress(n) {
+    if (pinActual.length >= 4) return;
+    pinActual += n;
+    actualizarDots();
+    if (pinActual.length === 4) {
+      setTimeout(verificarPin, 150);
+    }
+  }
 
+  function pinDel() {
+    pinActual = pinActual.slice(0, -1);
+    actualizarDots();
+    document.getElementById('pin-error').textContent = '';
+  }
+
+  function actualizarDots() {
+    for (var i = 0; i < 4; i++) {
+      document.getElementById('d' + i).classList.toggle('filled', i < pinActual.length);
+    }
+  }
+
+  function verificarPin() {
+    if (pinActual === PIN_CORRECTO) {
+      document.getElementById('pin-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      cargarDashboard();
+    } else {
+      document.getElementById('pin-error').textContent = 'PIN incorrecto';
+      pinActual = '';
+      actualizarDots();
+    }
+  }
+
+  // ── OVERLAY ──────────────────────────────────────────────────────────────
+  function mostrarOverlay(msg) {
+    document.getElementById('overlay-msg').textContent = msg || 'Cargando...';
+    document.getElementById('overlay').classList.add('visible');
+  }
+
+  function ocultarOverlay() {
+    document.getElementById('overlay').classList.remove('visible');
+  }
+
+  // ── API ──────────────────────────────────────────────────────────────────
   function llamarAPI(params, callback) {
-    var btn = document.getElementById('btnBuscar');
-    if (btn) btn.disabled = true;
-
     var qs = Object.keys(params).map(function(k) {
       return k + '=' + encodeURIComponent(params[k]);
     }).join('&');
@@ -342,34 +372,60 @@
     window[cbName] = function(data) {
       delete window[cbName];
       document.body.removeChild(script);
-      if (btn) btn.disabled = false;
+      ocultarOverlay();
       callback(data);
     };
     script.onerror = function() {
       delete window[cbName];
       document.body.removeChild(script);
-      if (btn) btn.disabled = false;
+      ocultarOverlay();
       mostrarError('Error de conexión. Verificá tu internet.');
     };
     script.src = API + '?' + qs + '&callback=' + cbName;
     document.body.appendChild(script);
   }
 
+  // ── SEARCH ───────────────────────────────────────────────────────────────
+  document.getElementById('inputBuscar').addEventListener('input', function() {
+    var val = this.value;
+    document.getElementById('btnClear').style.display = val ? 'block' : 'none';
+    if (!val) {
+      document.getElementById('content').innerHTML =
+        '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
+      ultimaBusqueda = '';
+    }
+  });
+
+  document.getElementById('inputBuscar').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') buscarClientes();
+  });
+
+  function limpiarBusqueda() {
+    document.getElementById('inputBuscar').value = '';
+    document.getElementById('btnClear').style.display = 'none';
+    document.getElementById('content').innerHTML =
+      '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
+    ultimaBusqueda = '';
+    document.getElementById('inputBuscar').focus();
+  }
+
   function buscarClientes() {
     var q = document.getElementById('inputBuscar').value.trim();
     if (!q) return;
-    mostrarCargando('Buscando clientes...');
+    ultimaBusqueda = q;
+    mostrarOverlay('Buscando clientes...');
     llamarAPI({ accion: 'buscarClientes', q: q.toUpperCase() }, function(data) {
       if (data.error) { mostrarError(data.error); return; }
-      renderLista(data.clientes, q);
+      renderLista(data.clientes);
     });
   }
 
   function verCuenta(ruc, nombre) {
-    mostrarCargando('Cargando estado de cuenta...');
+    mostrarOverlay('Cargando estado de cuenta...');
     document.getElementById('headerTitle').textContent = nombre;
     document.getElementById('btnVolver').style.display = 'block';
     document.getElementById('searchWrap').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
     llamarAPI({ accion: 'cuenta', ruc: ruc }, function(data) {
       if (data.error) { mostrarError(data.error); return; }
       renderCuenta(data);
@@ -380,37 +436,81 @@
     document.getElementById('headerTitle').textContent = 'Cuentas a Cobrar';
     document.getElementById('btnVolver').style.display = 'none';
     document.getElementById('searchWrap').style.display = 'block';
-    document.getElementById('content').innerHTML = '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
-    var q = document.getElementById('inputBuscar').value.trim();
-    if (q) buscarClientes();
-  }
-
-  function mostrarCargando(msg) {
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('inputBuscar').value = '';
+    document.getElementById('btnClear').style.display = 'none';
+    ultimaBusqueda = '';
     document.getElementById('content').innerHTML =
-      '<div class="loading-wrap"><div class="spinner"></div>' + (msg || 'Cargando...') + '</div>';
+      '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
   }
 
+  // ── DASHBOARD ────────────────────────────────────────────────────────────
+  function cargarDashboard() {
+    mostrarOverlay('Cargando datos...');
+    llamarAPI({ accion: 'dashboard' }, function(data) {
+      if (data.error) { document.getElementById('dashboard').innerHTML = ''; return; }
+      renderDashboard(data);
+    });
+  }
+
+  function renderDashboard(d) {
+    var mes = d.mes, mora = d.mora, cartera = d.cartera;
+    var colorMes = mes.porcentaje >= 80 ? 'success' : mes.porcentaje >= 50 ? 'warning' : 'danger';
+    var colorMora = mora.porcentaje <= 10 ? 'success' : mora.porcentaje <= 25 ? 'warning' : 'danger';
+    var colorCartera = cartera.porcentaje >= 80 ? 'success' : cartera.porcentaje >= 50 ? 'warning' : 'danger';
+
+    document.getElementById('dashboard').innerHTML =
+      '<div class="dash-titulo">Resumen de cartera</div>' +
+      '<div class="dash-grid">' +
+
+      '<div class="dash-card">' +
+        '<div class="dash-card-label">Cobro del mes</div>' +
+        '<div class="dash-card-valor ' + colorMes + '">Gs. ' + fmt(mes.realizado) + '</div>' +
+        '<div class="progress-wrap"><div class="progress-bar ' + colorMes + '" style="width:' + Math.min(mes.porcentaje, 100) + '%"></div></div>' +
+        '<div class="dash-card-sub">' + mes.porcentaje + '% de Gs. ' + fmt(mes.esperado) + ' esperado</div>' +
+      '</div>' +
+
+      '<div class="dash-card">' +
+        '<div class="dash-card-label">Mora activa</div>' +
+        '<div class="dash-card-valor danger">Gs. ' + fmt(mora.monto) + '</div>' +
+        '<div class="progress-wrap"><div class="progress-bar danger" style="width:' + Math.min(mora.porcentaje, 100) + '%"></div></div>' +
+        '<div class="dash-card-sub">' + mora.porcentaje + '% del cobro esperado</div>' +
+      '</div>' +
+
+      '<div class="dash-card full">' +
+        '<div class="dash-card-label">Cartera vencida hasta hoy</div>' +
+        '<div class="dash-card-valor ' + colorCartera + '">Gs. ' + fmt(cartera.cobrado) + ' cobrado</div>' +
+        '<div class="progress-wrap"><div class="progress-bar ' + colorCartera + '" style="width:' + Math.min(cartera.porcentaje, 100) + '%"></div></div>' +
+        '<div class="dash-card-sub">' + cartera.porcentaje + '% de Gs. ' + fmt(cartera.esperado) + ' esperado hasta hoy</div>' +
+      '</div>' +
+
+      '</div>';
+  }
+
+  // ── RENDER ───────────────────────────────────────────────────────────────
   function mostrarError(msg) {
     document.getElementById('content').innerHTML = '<div class="error-msg">⚠️ ' + msg + '</div>';
   }
 
-  function fmt(n) {
-    return Number(n).toLocaleString('es-PY');
-  }
+  function fmt(n) { return Number(n).toLocaleString('es-PY'); }
 
-  function renderLista(clientes, q) {
+  function renderLista(clientes) {
     if (!clientes || clientes.length === 0) {
-      mostrarError('No se encontraron clientes con "' + q + '".');
+      mostrarError('No se encontraron clientes.');
       return;
     }
     var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s) encontrado(s)</div>';
     clientes.forEach(function(c) {
-      html += '<div class="cliente-item" onclick="verCuenta(\'' +
-        c.ruc.replace(/'/g, "\\'") + '\', \'' +
-        c.nombre.replace(/'/g, "\\'") + '\')">' +
-        '<div><div class="cliente-item-nombre">' + c.nombre + '</div>' +
-        '<div class="cliente-item-ruc">RUC: ' + c.ruc + '</div></div>' +
-        '<div class="cliente-item-arrow">›</div></div>';
+      var rucEsc = c.ruc.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      var nomEsc = c.nombre.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      html += '<div class="cliente-item" onclick="verCuenta(\'' + rucEsc + '\',\'' + nomEsc + '\')">' +
+        '<div>' +
+          '<div class="cliente-item-nombre">' + c.nombre + '</div>' +
+          '<div class="cliente-item-ruc">RUC: ' + c.ruc + '</div>' +
+          '<div class="cliente-item-total">Total comprado: Gs. ' + fmt(c.totalComprado) + '</div>' +
+        '</div>' +
+        '<div class="cliente-item-arrow">›</div>' +
+        '</div>';
     });
     document.getElementById('content').innerHTML = html;
   }
@@ -422,30 +522,30 @@
       return f.cuotas.some(function(c) { return c.mor > 0 && c.saldo > 0; });
     });
 
-    var badgeCliente = data.saldoGlobal === 0
+    var badge = data.saldoGlobal === 0
       ? '<span class="badge badge-pagado">✓ Al día</span>'
-      : hayMora
-        ? '<span class="badge badge-mora">⚠ En mora</span>'
-        : '<span class="badge badge-pendiente">Saldo pendiente</span>';
+      : hayMora ? '<span class="badge badge-mora">⚠ En mora</span>'
+      : '<span class="badge badge-pendiente">Saldo pendiente</span>';
 
     var html = '<div class="cliente-card">' +
       '<div class="cliente-nombre">' + data.nombre + '</div>' +
       '<div class="cliente-ruc">RUC: ' + data.ruc + '</div>' +
-      badgeCliente +
-      '<div style="height:12px"></div>' +
+      '<div class="cliente-total-comprado">Total comprado: Gs. ' + fmt(data.totalComprado) + '</div>' +
+      badge +
+      '<div style="height:10px"></div>' +
       '<div class="saldo-global-label">Saldo total pendiente</div>' +
       '<div class="saldo-global-monto' + (data.saldoGlobal === 0 ? ' cero' : '') + '">Gs. ' + fmt(data.saldoGlobal) + '</div>' +
       '</div>';
 
     if (pendientes.length > 0) {
-      html += '<div class="seccion-titulo">Facturas con saldo pendiente (' + pendientes.length + ')</div>';
+      html += '<div class="seccion-titulo">Facturas pendientes (' + pendientes.length + ')</div>';
       pendientes.forEach(function(f, i) { html += renderFactura(f, 'p' + i); });
     }
 
     if (pagadas.length > 0) {
       html += '<button class="historial-toggle" onclick="toggleHistorial()">' +
-        '<span id="historial-icon">▶</span> Ver historial pagado (' + pagadas.length + ')' +
-        '</button><div id="historial-wrap" style="display:none">' +
+        '<span id="hist-icon">▶</span> Ver historial pagado (' + pagadas.length + ')</button>' +
+        '<div id="historial-wrap" style="display:none">' +
         '<div class="seccion-titulo">Historial pagado</div>';
       pagadas.forEach(function(f, i) { html += renderFactura(f, 'h' + i); });
       html += '</div>';
@@ -455,74 +555,65 @@
   }
 
   function renderFactura(f, id) {
-    var producto = f.producto
+    var prod = f.producto
       ? '<div class="factura-producto">' + f.producto + '</div>'
       : '<div class="factura-producto sin-producto">Sin descripción</div>';
 
-    var cuotasPend = f.cuotas.filter(function(c) { return c.saldo > 0; });
-    var cuotasPag = f.cuotas.filter(function(c) { return c.saldo === 0; });
-    var hayMora = cuotasPend.some(function(c) { return c.mor > 0; });
+    var pend = f.cuotas.filter(function(c) { return c.saldo > 0; });
+    var pag = f.cuotas.filter(function(c) { return c.saldo === 0; });
+    var mora = pend.some(function(c) { return c.mor > 0; });
 
     var badge = f.estado === 'PAGADO'
       ? '<span class="badge badge-pagado">Pagado</span>'
-      : hayMora
-        ? '<span class="badge badge-mora">En mora</span>'
-        : '<span class="badge badge-pendiente">Pendiente</span>';
+      : mora ? '<span class="badge badge-mora">En mora</span>'
+      : '<span class="badge badge-pendiente">Pendiente</span>';
 
     var saldoHtml = f.estado === 'PAGADO'
       ? '<div class="factura-saldo pagado">✓ Saldado</div>'
       : '<div class="factura-saldo">Saldo: Gs. ' + fmt(f.totalSaldo) + '</div>' +
-        '<div class="factura-saldo-total">Total fact: Gs. ' + fmt(f.totalImporte) + '</div>';
+        '<div class="factura-saldo-total">Total: Gs. ' + fmt(f.totalImporte) + '</div>';
 
     var cuotasHtml = '';
-    if (cuotasPend.length > 0) {
+    if (pend.length > 0) {
       cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pendientes</div>';
-      cuotasPend.forEach(function(c) { cuotasHtml += renderCuota(c, false); });
+      pend.forEach(function(c) { cuotasHtml += renderCuota(c, false); });
     }
-    if (cuotasPag.length > 0) {
+    if (pag.length > 0) {
       cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pagadas</div>';
-      cuotasPag.forEach(function(c) { cuotasHtml += renderCuota(c, true); });
+      pag.forEach(function(c) { cuotasHtml += renderCuota(c, true); });
     }
 
     return '<div class="factura-card" id="fc-' + id + '">' +
       '<div class="factura-header" onclick="toggleFactura(\'' + id + '\')">' +
-      '<div class="factura-info">' +
-      '<div class="factura-numero">' + f.factura + '</div>' +
-      producto +
-      '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div>' +
-      '</div>' +
-      '<div class="factura-derecha">' + badge + saldoHtml + '</div>' +
-      '<div class="factura-chevron">⌄</div>' +
+        '<div class="factura-info">' +
+          '<div class="factura-numero">' + f.factura + '</div>' + prod +
+          '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div>' +
+        '</div>' +
+        '<div class="factura-derecha">' + badge + saldoHtml + '</div>' +
+        '<div class="factura-chevron">⌄</div>' +
       '</div>' +
       '<div class="cuotas-wrap">' + cuotasHtml + '</div>' +
       '</div>';
   }
 
   function renderCuota(c, pagada) {
-    var moraHtml = '';
-    if (pagada) {
-      moraHtml = '<span class="cuota-mora al-dia">✓ Pagada</span>';
-    } else if (c.mor > 0) {
-      moraHtml = '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>';
-    } else if (c.mor >= -7) {
-      moraHtml = '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>';
-    } else {
-      moraHtml = '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
-    }
+    var moraHtml = pagada
+      ? '<span class="cuota-mora al-dia">✓ Pagada</span>'
+      : c.mor > 0
+        ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
+        : c.mor >= -7
+          ? '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>'
+          : '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
 
     var saldoHtml = pagada
       ? '<div class="cuota-saldo pagada">Gs. ' + fmt(c.importe) + '</div>'
       : '<div class="cuota-saldo">Gs. ' + fmt(c.saldo) + '</div>';
 
     return '<div class="cuota-row">' +
-      '<div class="cuota-izq">' +
-      '<div class="cuota-num">Cuota ' + c.cta + '</div>' +
-      '<div class="cuota-fecha">Venc: ' + c.venc + '</div>' +
-      '</div>' +
+      '<div class="cuota-izq"><div class="cuota-num">Cuota ' + c.cta + '</div><div class="cuota-fecha">Venc: ' + c.venc + '</div></div>' +
       moraHtml +
-      '<div class="cuota-der">' + saldoHtml +
-      '<div class="cuota-importe">Importe: Gs. ' + fmt(c.importe) + '</div>' +
-      '</div></div>';
+      '<div class="cuota-der">' + saldoHtml + '<div class="cuota-importe">Importe: Gs. ' + fmt(c.importe) + '</div></div>' +
+      '</div>';
   }
 
   function toggleFactura(id) {
@@ -530,11 +621,11 @@
   }
 
   function toggleHistorial() {
-    var wrap = document.getElementById('historial-wrap');
-    var icon = document.getElementById('historial-icon');
-    var visible = wrap.style.display !== 'none';
-    wrap.style.display = visible ? 'none' : 'block';
-    icon.textContent = visible ? '▶' : '▼';
+    var w = document.getElementById('historial-wrap');
+    var i = document.getElementById('hist-icon');
+    var v = w.style.display !== 'none';
+    w.style.display = v ? 'none' : 'block';
+    i.textContent = v ? '▶' : '▼';
   }
 </script>
 </body>
