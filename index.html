@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuentas a Cobrar — TECH MARKET</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --primary: #1847C8;
+      --primary-light: #e8eefb;
+      --danger: #e03131;
+      --danger-light: #fff0f0;
+      --success: #2f9e44;
+      --success-light: #ebfbee;
+      --warning: #f08c00;
+      --warning-light: #fff8e6;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --border: #e2e8f0;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--primary);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(24,71,200,0.3);
+    }
+    .header-title {
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .header-sub {
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    /* SEARCH */
+    .search-wrap {
+      padding: 20px 16px 12px;
+    }
+    .search-box {
+      display: flex;
+      gap: 10px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s;
+    }
+    .search-box:focus-within {
+      border-color: var(--primary);
+    }
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--text);
+      background: transparent;
+    }
+    .search-box input::placeholder { color: var(--text-muted); }
+    .btn-search {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 8px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-search:hover { background: #1339a8; }
+    .btn-search:disabled { background: #9ab0e8; cursor: not-allowed; }
+
+    /* CONTENIDO */
+    .content { padding: 0 16px 32px; }
+
+    /* ESTADO */
+    .estado-msg {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .estado-msg .icon { font-size: 40px; margin-bottom: 10px; }
+    .error-msg {
+      background: var(--danger-light);
+      color: var(--danger);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    /* CARD CLIENTE */
+    .cliente-card {
+      background: var(--primary);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .cliente-nombre {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .cliente-ruc {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-bottom: 16px;
+    }
+    .saldo-global-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    .saldo-global-monto {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .saldo-global-monto.cero { opacity: 0.6; }
+
+    /* SECCIÓN */
+    .seccion-titulo {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin: 20px 0 10px;
+    }
+
+    /* FACTURA CARD */
+    .factura-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+    }
+    .factura-card.pagado {
+      border-color: var(--border);
+      opacity: 0.85;
+    }
+
+    .factura-header {
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+      user-select: none;
+      gap: 10px;
+    }
+    .factura-header:active { background: #f8fafc; }
+
+    .factura-info { flex: 1; min-width: 0; }
+    .factura-numero {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+    .factura-producto {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .factura-producto.sin-producto {
+      color: var(--text-muted);
+      font-style: italic;
+      font-weight: 400;
+    }
+    .factura-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .factura-derecha {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .badge-pendiente { background: var(--warning-light); color: var(--warning); }
+    .badge-mora { background: var(--danger-light); color: var(--danger); }
+    .badge-pagado { background: var(--success-light); color: var(--success); }
+
+    .factura-saldo {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .factura-saldo.pagado { color: var(--success); }
+    .factura-chevron {
+      font-size: 18px;
+      color: var(--text-muted);
+      transition: transform 0.25s;
+      margin-top: 2px;
+    }
+    .factura-card.abierta .factura-chevron { transform: rotate(180deg); }
+
+    /* CUOTAS */
+    .cuotas-wrap {
+      display: none;
+      border-top: 1.5px solid var(--border);
+    }
+    .factura-card.abierta .cuotas-wrap { display: block; }
+
+    .cuotas-subtitulo {
+      padding: 10px 16px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+    }
+
+    .cuota-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      gap: 8px;
+    }
+    .cuota-row:first-child { border-top: none; }
+
+    .cuota-izq { flex: 1; min-width: 0; }
+    .cuota-num {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .cuota-fecha {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .cuota-mora {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .cuota-mora.en-mora {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+    .cuota-mora.al-dia {
+      background: var(--success-light);
+      color: var(--success);
+    }
+    .cuota-mora.proximo {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+    .cuota-der { text-align: right; flex-shrink: 0; }
+    .cuota-saldo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .cuota-saldo.pagada { color: var(--success); font-size: 12px; }
+    .cuota-importe {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* HISTORIAL toggle */
+    .historial-toggle {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      width: 100%;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* SPINNER */
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 3px solid rgba(24,71,200,0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Cuentas a Cobrar</div>
+    <div class="header-sub">TECH MARKET</div>
+  </div>
+</div>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <input type="text" id="inputBuscar" placeholder="Nombre o RUC del cliente..." autocomplete="off" />
+    <button class="btn-search" id="btnBuscar" onclick="buscar()">Buscar</button>
+  </div>
+</div>
+
+<div class="content" id="content">
+  <div class="estado-msg">
+    <div class="icon">🔍</div>
+    Buscá un cliente para ver su estado de cuenta
+  </div>
+</div>
+
+<script>
+  const API = 'https://script.google.com/macros/s/AKfycbzi8W1QM85d0MnTBSi6oAaJTCRqfltEJyL3wUq2L3CT_WVwkGB41wdKqqxGBuTE-a-i/exec';
+
+  document.getElementById('inputBuscar').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') buscar();
+  });
+
+  function buscar() {
+    const q = document.getElementById('inputBuscar').value.trim();
+    if (!q) return;
+    const btn = document.getElementById('btnBuscar');
+    btn.disabled = true;
+    mostrarCargando();
+
+    const script = document.createElement('script');
+    const cb = 'cb_' + Date.now();
+    window[cb] = function(data) {
+      delete window[cb];
+      document.body.removeChild(script);
+      btn.disabled = false;
+      renderizar(data);
+    };
+    script.src = API + '?q=' + encodeURIComponent(q.toUpperCase()) + '&callback=' + cb;
+    script.onerror = function() {
+      delete window[cb];
+      document.body.removeChild(script);
+      btn.disabled = false;
+      mostrarError('Error de conexión. Verificá tu internet.');
+    };
+    document.body.appendChild(script);
+  }
+
+  function mostrarCargando() {
+    document.getElementById('content').innerHTML = `
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        Buscando cliente...
+      </div>`;
+  }
+
+  function mostrarError(msg) {
+    document.getElementById('content').innerHTML = `<div class="error-msg">⚠️ ${msg}</div>`;
+  }
+
+  function fmt(n) {
+    return Number(n).toLocaleString('es-PY');
+  }
+
+  function tieneMora(facturas) {
+    return facturas.some(f => f.estado === 'PENDIENTE' && f.cuotas.some(c => c.mor > 0 && c.saldo > 0));
+  }
+
+  function renderizar(data) {
+    if (data.error) { mostrarError(data.error); return; }
+
+    const pendientes = data.facturas.filter(f => f.estado === 'PENDIENTE');
+    const pagadas = data.facturas.filter(f => f.estado === 'PAGADO');
+    const hayMora = tieneMora(data.facturas);
+
+    let html = '';
+
+    // Card cliente
+    const badgeCliente = data.saldoGlobal === 0
+      ? `<span class="badge badge-pagado">✓ Al día</span>`
+      : hayMora
+        ? `<span class="badge badge-mora">⚠ En mora</span>`
+        : `<span class="badge badge-pendiente">Saldo pendiente</span>`;
+
+    html += `
+      <div class="cliente-card">
+        <div class="cliente-nombre">${data.nombre}</div>
+        <div class="cliente-ruc">RUC: ${data.ruc}</div>
+        ${badgeCliente}
+        <div style="height:12px"></div>
+        <div class="saldo-global-label">Saldo total pendiente</div>
+        <div class="saldo-global-monto ${data.saldoGlobal === 0 ? 'cero' : ''}">
+          Gs. ${fmt(data.saldoGlobal)}
+        </div>
+      </div>`;
+
+    // Facturas pendientes
+    if (pendientes.length > 0) {
+      html += `<div class="seccion-titulo">Facturas con saldo pendiente (${pendientes.length})</div>`;
+      pendientes.forEach((f, i) => {
+        html += renderFactura(f, 'p' + i);
+      });
+    }
+
+    // Historial pagadas
+    if (pagadas.length > 0) {
+      html += `
+        <button class="historial-toggle" onclick="toggleHistorial()">
+          <span id="historial-icon">▶</span> Ver historial de facturas pagadas (${pagadas.length})
+        </button>
+        <div id="historial-wrap" style="display:none">
+          <div class="seccion-titulo">Historial pagado</div>`;
+      pagadas.forEach((f, i) => {
+        html += renderFactura(f, 'h' + i);
+      });
+      html += `</div>`;
+    }
+
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function renderFactura(f, id) {
+    const producto = f.producto
+      ? `<div class="factura-producto">${f.producto}</div>`
+      : `<div class="factura-producto sin-producto">Sin descripción</div>`;
+
+    const cuotasPend = f.cuotas.filter(c => c.saldo > 0);
+    const cuotasPag = f.cuotas.filter(c => c.saldo === 0);
+    const hayMoraFact = cuotasPend.some(c => c.mor > 0);
+
+    const badge = f.estado === 'PAGADO'
+      ? `<span class="badge badge-pagado">Pagado</span>`
+      : hayMoraFact
+        ? `<span class="badge badge-mora">En mora</span>`
+        : `<span class="badge badge-pendiente">Pendiente</span>`;
+
+    const saldoStr = f.estado === 'PAGADO'
+      ? `<div class="factura-saldo pagado">✓ Saldado</div>`
+      : `<div class="factura-saldo">Gs. ${fmt(f.totalSaldo)}</div>`;
+
+    let cuotasHtml = '';
+
+    if (cuotasPend.length > 0) {
+      cuotasHtml += `<div class="cuotas-subtitulo">Cuotas pendientes</div>`;
+      cuotasPend.forEach(c => {
+        cuotasHtml += renderCuota(c, false);
+      });
+    }
+
+    if (cuotasPag.length > 0) {
+      cuotasHtml += `<div class="cuotas-subtitulo">Cuotas pagadas</div>`;
+      cuotasPag.forEach(c => {
+        cuotasHtml += renderCuota(c, true);
+      });
+    }
+
+    return `
+      <div class="factura-card" id="fc-${id}">
+        <div class="factura-header" onclick="toggleFactura('${id}')">
+          <div class="factura-info">
+            <div class="factura-numero">${f.factura}</div>
+            ${producto}
+            <div class="factura-meta">Fecha: ${f.fecha} · ${f.moneda}</div>
+          </div>
+          <div class="factura-derecha">
+            ${badge}
+            ${saldoStr}
+          </div>
+          <div class="factura-chevron">⌄</div>
+        </div>
+        <div class="cuotas-wrap">${cuotasHtml}</div>
+      </div>`;
+  }
+
+  function renderCuota(c, pagada) {
+    let moraHtml = '';
+    if (pagada) {
+      moraHtml = `<span class="cuota-mora al-dia">✓ Pagada</span>`;
+    } else if (c.mor > 0) {
+      moraHtml = `<span class="cuota-mora en-mora">⚠ ${c.mor} días mora</span>`;
+    } else if (c.mor >= -7) {
+      moraHtml = `<span class="cuota-mora proximo">Vence en ${Math.abs(c.mor)} días</span>`;
+    } else {
+      moraHtml = `<span class="cuota-mora al-dia">Vence ${c.venc}</span>`;
+    }
+
+    const saldoHtml = pagada
+      ? `<div class="cuota-saldo pagada">Gs. ${fmt(c.importe)}</div>`
+      : `<div class="cuota-saldo">Gs. ${fmt(c.saldo)}</div>`;
+
+    return `
+      <div class="cuota-row">
+        <div class="cuota-izq">
+          <div class="cuota-num">Cuota ${c.cta}</div>
+          <div class="cuota-fecha">Venc: ${c.venc}</div>
+        </div>
+        ${moraHtml}
+        <div class="cuota-der">
+          ${saldoHtml}
+          <div class="cuota-importe">Importe: Gs. ${fmt(c.importe)}</div>
+        </div>
+      </div>`;
+  }
+
+  function toggleFactura(id) {
+    const card = document.getElementById('fc-' + id);
+    card.classList.toggle('abierta');
+  }
+
+  function toggleHistorial() {
+    const wrap = document.getElementById('historial-wrap');
+    const icon = document.getElementById('historial-icon');
+    const visible = wrap.style.display !== 'none';
+    wrap.style.display = visible ? 'none' : 'block';
+    icon.textContent = visible ? '▶' : '▼';
+  }
+</script>
+</body>
+</html>
