@@ -33,7 +33,6 @@
       min-height: 100vh;
     }
 
-    /* HEADER */
     .header {
       background: var(--primary);
       padding: 18px 20px;
@@ -45,22 +44,20 @@
       z-index: 100;
       box-shadow: 0 2px 8px rgba(24,71,200,0.3);
     }
-    .header-title {
+    .header-back {
       color: #fff;
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 0.3px;
+      font-size: 22px;
+      cursor: pointer;
+      display: none;
+      background: none;
+      border: none;
+      padding: 0 8px 0 0;
+      line-height: 1;
     }
-    .header-sub {
-      color: rgba(255,255,255,0.7);
-      font-size: 12px;
-      font-weight: 400;
-    }
+    .header-title { color: #fff; font-size: 17px; font-weight: 700; }
+    .header-sub { color: rgba(255,255,255,0.7); font-size: 12px; }
 
-    /* SEARCH */
-    .search-wrap {
-      padding: 20px 16px 12px;
-    }
+    .search-wrap { padding: 20px 16px 12px; }
     .search-box {
       display: flex;
       gap: 10px;
@@ -72,9 +69,7 @@
       box-shadow: var(--shadow);
       transition: border-color 0.2s;
     }
-    .search-box:focus-within {
-      border-color: var(--primary);
-    }
+    .search-box:focus-within { border-color: var(--primary); }
     .search-box input {
       flex: 1;
       border: none;
@@ -96,14 +91,13 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.2s;
+      white-space: nowrap;
     }
     .btn-search:hover { background: #1339a8; }
     .btn-search:disabled { background: #9ab0e8; cursor: not-allowed; }
 
-    /* CONTENIDO */
     .content { padding: 0 16px 32px; }
 
-    /* ESTADO */
     .estado-msg {
       text-align: center;
       padding: 48px 20px;
@@ -111,6 +105,7 @@
       font-size: 14px;
     }
     .estado-msg .icon { font-size: 40px; margin-bottom: 10px; }
+
     .error-msg {
       background: var(--danger-light);
       color: var(--danger);
@@ -121,6 +116,33 @@
       margin-top: 8px;
     }
 
+    /* LISTA DE CLIENTES */
+    .lista-titulo {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin: 8px 0 10px;
+    }
+    .cliente-item {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.15s;
+    }
+    .cliente-item:hover { border-color: var(--primary); }
+    .cliente-item-nombre { font-size: 15px; font-weight: 600; color: var(--text); }
+    .cliente-item-ruc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .cliente-item-arrow { color: var(--primary); font-size: 18px; }
+
     /* CARD CLIENTE */
     .cliente-card {
       background: var(--primary);
@@ -129,16 +151,8 @@
       margin-bottom: 20px;
       color: #fff;
     }
-    .cliente-nombre {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .cliente-ruc {
-      font-size: 12px;
-      opacity: 0.75;
-      margin-bottom: 16px;
-    }
+    .cliente-nombre { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+    .cliente-ruc { font-size: 12px; opacity: 0.75; margin-bottom: 16px; }
     .saldo-global-label {
       font-size: 11px;
       text-transform: uppercase;
@@ -146,13 +160,23 @@
       opacity: 0.8;
       margin-bottom: 4px;
     }
-    .saldo-global-monto {
-      font-size: 28px;
-      font-weight: 700;
-    }
+    .saldo-global-monto { font-size: 28px; font-weight: 700; }
     .saldo-global-monto.cero { opacity: 0.6; }
 
-    /* SECCIÓN */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .badge-pendiente { background: var(--warning-light); color: var(--warning); }
+    .badge-mora { background: var(--danger-light); color: var(--danger); }
+    .badge-pagado { background: var(--success-light); color: var(--success); }
+
     .seccion-titulo {
       font-size: 12px;
       font-weight: 700;
@@ -171,11 +195,6 @@
       overflow: hidden;
       border: 1.5px solid var(--border);
     }
-    .factura-card.pagado {
-      border-color: var(--border);
-      opacity: 0.85;
-    }
-
     .factura-header {
       padding: 14px 16px;
       display: flex;
@@ -186,57 +205,15 @@
       gap: 10px;
     }
     .factura-header:active { background: #f8fafc; }
-
     .factura-info { flex: 1; min-width: 0; }
-    .factura-numero {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 2px;
-    }
-    .factura-producto {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .factura-producto.sin-producto {
-      color: var(--text-muted);
-      font-style: italic;
-      font-weight: 400;
-    }
-    .factura-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .factura-derecha {
-      text-align: right;
-      flex-shrink: 0;
-    }
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-    .badge-pendiente { background: var(--warning-light); color: var(--warning); }
-    .badge-mora { background: var(--danger-light); color: var(--danger); }
-    .badge-pagado { background: var(--success-light); color: var(--success); }
-
-    .factura-saldo {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
+    .factura-numero { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+    .factura-producto { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .factura-producto.sin-producto { color: var(--text-muted); font-style: italic; font-weight: 400; }
+    .factura-meta { font-size: 12px; color: var(--text-muted); }
+    .factura-derecha { text-align: right; flex-shrink: 0; }
+    .factura-saldo { font-size: 15px; font-weight: 700; color: var(--text); }
     .factura-saldo.pagado { color: var(--success); }
+    .factura-saldo-total { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .factura-chevron {
       font-size: 18px;
       color: var(--text-muted);
@@ -245,11 +222,7 @@
     }
     .factura-card.abierta .factura-chevron { transform: rotate(180deg); }
 
-    /* CUOTAS */
-    .cuotas-wrap {
-      display: none;
-      border-top: 1.5px solid var(--border);
-    }
+    .cuotas-wrap { display: none; border-top: 1.5px solid var(--border); }
     .factura-card.abierta .cuotas-wrap { display: block; }
 
     .cuotas-subtitulo {
@@ -269,19 +242,9 @@
       border-top: 1px solid var(--border);
       gap: 8px;
     }
-    .cuota-row:first-child { border-top: none; }
-
     .cuota-izq { flex: 1; min-width: 0; }
-    .cuota-num {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-    .cuota-fecha {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
+    .cuota-num { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .cuota-fecha { font-size: 12px; color: var(--text-muted); }
     .cuota-mora {
       font-size: 11px;
       font-weight: 600;
@@ -289,31 +252,14 @@
       border-radius: 10px;
       white-space: nowrap;
     }
-    .cuota-mora.en-mora {
-      background: var(--danger-light);
-      color: var(--danger);
-    }
-    .cuota-mora.al-dia {
-      background: var(--success-light);
-      color: var(--success);
-    }
-    .cuota-mora.proximo {
-      background: var(--warning-light);
-      color: var(--warning);
-    }
+    .cuota-mora.en-mora { background: var(--danger-light); color: var(--danger); }
+    .cuota-mora.al-dia { background: var(--success-light); color: var(--success); }
+    .cuota-mora.proximo { background: var(--warning-light); color: var(--warning); }
     .cuota-der { text-align: right; flex-shrink: 0; }
-    .cuota-saldo {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-    }
+    .cuota-saldo { font-size: 14px; font-weight: 700; color: var(--text); }
     .cuota-saldo.pagada { color: var(--success); font-size: 12px; }
-    .cuota-importe {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .cuota-importe { font-size: 11px; color: var(--text-muted); }
 
-    /* HISTORIAL toggle */
     .historial-toggle {
       background: none;
       border: 1.5px solid var(--border);
@@ -332,7 +278,6 @@
       gap: 8px;
     }
 
-    /* SPINNER */
     .spinner {
       display: inline-block;
       width: 20px; height: 20px;
@@ -356,16 +301,17 @@
 <body>
 
 <div class="header">
+  <button class="header-back" id="btnVolver" onclick="volverALista()">‹</button>
   <div>
-    <div class="header-title">Cuentas a Cobrar</div>
+    <div class="header-title" id="headerTitle">Cuentas a Cobrar</div>
     <div class="header-sub">TECH MARKET</div>
   </div>
 </div>
 
-<div class="search-wrap">
+<div class="search-wrap" id="searchWrap">
   <div class="search-box">
     <input type="text" id="inputBuscar" placeholder="Nombre o RUC del cliente..." autocomplete="off" />
-    <button class="btn-search" id="btnBuscar" onclick="buscar()">Buscar</button>
+    <button class="btn-search" id="btnBuscar" onclick="buscarClientes()">Buscar</button>
   </div>
 </div>
 
@@ -380,199 +326,213 @@
   const API = 'https://script.google.com/macros/s/AKfycbzi8W1QM85d0MnTBSi6oAaJTCRqfltEJyL3wUq2L3CT_WVwkGB41wdKqqxGBuTE-a-i/exec';
 
   document.getElementById('inputBuscar').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') buscar();
+    if (e.key === 'Enter') buscarClientes();
   });
 
-  function buscar() {
-    const q = document.getElementById('inputBuscar').value.trim();
-    if (!q) return;
-    const btn = document.getElementById('btnBuscar');
-    btn.disabled = true;
-    mostrarCargando();
+  function llamarAPI(params, callback) {
+    var btn = document.getElementById('btnBuscar');
+    if (btn) btn.disabled = true;
 
-    const script = document.createElement('script');
-    const cb = 'cb_' + Date.now();
-    window[cb] = function(data) {
-      delete window[cb];
+    var qs = Object.keys(params).map(function(k) {
+      return k + '=' + encodeURIComponent(params[k]);
+    }).join('&');
+
+    var cbName = 'cb_' + Date.now();
+    var script = document.createElement('script');
+    window[cbName] = function(data) {
+      delete window[cbName];
       document.body.removeChild(script);
-      btn.disabled = false;
-      renderizar(data);
+      if (btn) btn.disabled = false;
+      callback(data);
     };
-    script.src = API + '?q=' + encodeURIComponent(q.toUpperCase()) + '&callback=' + cb;
     script.onerror = function() {
-      delete window[cb];
+      delete window[cbName];
       document.body.removeChild(script);
-      btn.disabled = false;
+      if (btn) btn.disabled = false;
       mostrarError('Error de conexión. Verificá tu internet.');
     };
+    script.src = API + '?' + qs + '&callback=' + cbName;
     document.body.appendChild(script);
   }
 
-  function mostrarCargando() {
-    document.getElementById('content').innerHTML = `
-      <div class="loading-wrap">
-        <div class="spinner"></div>
-        Buscando cliente...
-      </div>`;
+  function buscarClientes() {
+    var q = document.getElementById('inputBuscar').value.trim();
+    if (!q) return;
+    mostrarCargando('Buscando clientes...');
+    llamarAPI({ accion: 'buscarClientes', q: q.toUpperCase() }, function(data) {
+      if (data.error) { mostrarError(data.error); return; }
+      renderLista(data.clientes, q);
+    });
+  }
+
+  function verCuenta(ruc, nombre) {
+    mostrarCargando('Cargando estado de cuenta...');
+    document.getElementById('headerTitle').textContent = nombre;
+    document.getElementById('btnVolver').style.display = 'block';
+    document.getElementById('searchWrap').style.display = 'none';
+    llamarAPI({ accion: 'cuenta', ruc: ruc }, function(data) {
+      if (data.error) { mostrarError(data.error); return; }
+      renderCuenta(data);
+    });
+  }
+
+  function volverALista() {
+    document.getElementById('headerTitle').textContent = 'Cuentas a Cobrar';
+    document.getElementById('btnVolver').style.display = 'none';
+    document.getElementById('searchWrap').style.display = 'block';
+    document.getElementById('content').innerHTML = '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
+    var q = document.getElementById('inputBuscar').value.trim();
+    if (q) buscarClientes();
+  }
+
+  function mostrarCargando(msg) {
+    document.getElementById('content').innerHTML =
+      '<div class="loading-wrap"><div class="spinner"></div>' + (msg || 'Cargando...') + '</div>';
   }
 
   function mostrarError(msg) {
-    document.getElementById('content').innerHTML = `<div class="error-msg">⚠️ ${msg}</div>`;
+    document.getElementById('content').innerHTML = '<div class="error-msg">⚠️ ' + msg + '</div>';
   }
 
   function fmt(n) {
     return Number(n).toLocaleString('es-PY');
   }
 
-  function tieneMora(facturas) {
-    return facturas.some(f => f.estado === 'PENDIENTE' && f.cuotas.some(c => c.mor > 0 && c.saldo > 0));
+  function renderLista(clientes, q) {
+    if (!clientes || clientes.length === 0) {
+      mostrarError('No se encontraron clientes con "' + q + '".');
+      return;
+    }
+    var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s) encontrado(s)</div>';
+    clientes.forEach(function(c) {
+      html += '<div class="cliente-item" onclick="verCuenta(\'' +
+        c.ruc.replace(/'/g, "\\'") + '\', \'' +
+        c.nombre.replace(/'/g, "\\'") + '\')">' +
+        '<div><div class="cliente-item-nombre">' + c.nombre + '</div>' +
+        '<div class="cliente-item-ruc">RUC: ' + c.ruc + '</div></div>' +
+        '<div class="cliente-item-arrow">›</div></div>';
+    });
+    document.getElementById('content').innerHTML = html;
   }
 
-  function renderizar(data) {
-    if (data.error) { mostrarError(data.error); return; }
+  function renderCuenta(data) {
+    var pendientes = data.facturas.filter(function(f) { return f.estado === 'PENDIENTE'; });
+    var pagadas = data.facturas.filter(function(f) { return f.estado === 'PAGADO'; });
+    var hayMora = pendientes.some(function(f) {
+      return f.cuotas.some(function(c) { return c.mor > 0 && c.saldo > 0; });
+    });
 
-    const pendientes = data.facturas.filter(f => f.estado === 'PENDIENTE');
-    const pagadas = data.facturas.filter(f => f.estado === 'PAGADO');
-    const hayMora = tieneMora(data.facturas);
-
-    let html = '';
-
-    // Card cliente
-    const badgeCliente = data.saldoGlobal === 0
-      ? `<span class="badge badge-pagado">✓ Al día</span>`
+    var badgeCliente = data.saldoGlobal === 0
+      ? '<span class="badge badge-pagado">✓ Al día</span>'
       : hayMora
-        ? `<span class="badge badge-mora">⚠ En mora</span>`
-        : `<span class="badge badge-pendiente">Saldo pendiente</span>`;
+        ? '<span class="badge badge-mora">⚠ En mora</span>'
+        : '<span class="badge badge-pendiente">Saldo pendiente</span>';
 
-    html += `
-      <div class="cliente-card">
-        <div class="cliente-nombre">${data.nombre}</div>
-        <div class="cliente-ruc">RUC: ${data.ruc}</div>
-        ${badgeCliente}
-        <div style="height:12px"></div>
-        <div class="saldo-global-label">Saldo total pendiente</div>
-        <div class="saldo-global-monto ${data.saldoGlobal === 0 ? 'cero' : ''}">
-          Gs. ${fmt(data.saldoGlobal)}
-        </div>
-      </div>`;
+    var html = '<div class="cliente-card">' +
+      '<div class="cliente-nombre">' + data.nombre + '</div>' +
+      '<div class="cliente-ruc">RUC: ' + data.ruc + '</div>' +
+      badgeCliente +
+      '<div style="height:12px"></div>' +
+      '<div class="saldo-global-label">Saldo total pendiente</div>' +
+      '<div class="saldo-global-monto' + (data.saldoGlobal === 0 ? ' cero' : '') + '">Gs. ' + fmt(data.saldoGlobal) + '</div>' +
+      '</div>';
 
-    // Facturas pendientes
     if (pendientes.length > 0) {
-      html += `<div class="seccion-titulo">Facturas con saldo pendiente (${pendientes.length})</div>`;
-      pendientes.forEach((f, i) => {
-        html += renderFactura(f, 'p' + i);
-      });
+      html += '<div class="seccion-titulo">Facturas con saldo pendiente (' + pendientes.length + ')</div>';
+      pendientes.forEach(function(f, i) { html += renderFactura(f, 'p' + i); });
     }
 
-    // Historial pagadas
     if (pagadas.length > 0) {
-      html += `
-        <button class="historial-toggle" onclick="toggleHistorial()">
-          <span id="historial-icon">▶</span> Ver historial de facturas pagadas (${pagadas.length})
-        </button>
-        <div id="historial-wrap" style="display:none">
-          <div class="seccion-titulo">Historial pagado</div>`;
-      pagadas.forEach((f, i) => {
-        html += renderFactura(f, 'h' + i);
-      });
-      html += `</div>`;
+      html += '<button class="historial-toggle" onclick="toggleHistorial()">' +
+        '<span id="historial-icon">▶</span> Ver historial pagado (' + pagadas.length + ')' +
+        '</button><div id="historial-wrap" style="display:none">' +
+        '<div class="seccion-titulo">Historial pagado</div>';
+      pagadas.forEach(function(f, i) { html += renderFactura(f, 'h' + i); });
+      html += '</div>';
     }
 
     document.getElementById('content').innerHTML = html;
   }
 
   function renderFactura(f, id) {
-    const producto = f.producto
-      ? `<div class="factura-producto">${f.producto}</div>`
-      : `<div class="factura-producto sin-producto">Sin descripción</div>`;
+    var producto = f.producto
+      ? '<div class="factura-producto">' + f.producto + '</div>'
+      : '<div class="factura-producto sin-producto">Sin descripción</div>';
 
-    const cuotasPend = f.cuotas.filter(c => c.saldo > 0);
-    const cuotasPag = f.cuotas.filter(c => c.saldo === 0);
-    const hayMoraFact = cuotasPend.some(c => c.mor > 0);
+    var cuotasPend = f.cuotas.filter(function(c) { return c.saldo > 0; });
+    var cuotasPag = f.cuotas.filter(function(c) { return c.saldo === 0; });
+    var hayMora = cuotasPend.some(function(c) { return c.mor > 0; });
 
-    const badge = f.estado === 'PAGADO'
-      ? `<span class="badge badge-pagado">Pagado</span>`
-      : hayMoraFact
-        ? `<span class="badge badge-mora">En mora</span>`
-        : `<span class="badge badge-pendiente">Pendiente</span>`;
+    var badge = f.estado === 'PAGADO'
+      ? '<span class="badge badge-pagado">Pagado</span>'
+      : hayMora
+        ? '<span class="badge badge-mora">En mora</span>'
+        : '<span class="badge badge-pendiente">Pendiente</span>';
 
-    const saldoStr = f.estado === 'PAGADO'
-      ? `<div class="factura-saldo pagado">✓ Saldado</div>`
-      : `<div class="factura-saldo">Gs. ${fmt(f.totalSaldo)}</div>`;
+    var saldoHtml = f.estado === 'PAGADO'
+      ? '<div class="factura-saldo pagado">✓ Saldado</div>'
+      : '<div class="factura-saldo">Saldo: Gs. ' + fmt(f.totalSaldo) + '</div>' +
+        '<div class="factura-saldo-total">Total fact: Gs. ' + fmt(f.totalImporte) + '</div>';
 
-    let cuotasHtml = '';
-
+    var cuotasHtml = '';
     if (cuotasPend.length > 0) {
-      cuotasHtml += `<div class="cuotas-subtitulo">Cuotas pendientes</div>`;
-      cuotasPend.forEach(c => {
-        cuotasHtml += renderCuota(c, false);
-      });
+      cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pendientes</div>';
+      cuotasPend.forEach(function(c) { cuotasHtml += renderCuota(c, false); });
     }
-
     if (cuotasPag.length > 0) {
-      cuotasHtml += `<div class="cuotas-subtitulo">Cuotas pagadas</div>`;
-      cuotasPag.forEach(c => {
-        cuotasHtml += renderCuota(c, true);
-      });
+      cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pagadas</div>';
+      cuotasPag.forEach(function(c) { cuotasHtml += renderCuota(c, true); });
     }
 
-    return `
-      <div class="factura-card" id="fc-${id}">
-        <div class="factura-header" onclick="toggleFactura('${id}')">
-          <div class="factura-info">
-            <div class="factura-numero">${f.factura}</div>
-            ${producto}
-            <div class="factura-meta">Fecha: ${f.fecha} · ${f.moneda}</div>
-          </div>
-          <div class="factura-derecha">
-            ${badge}
-            ${saldoStr}
-          </div>
-          <div class="factura-chevron">⌄</div>
-        </div>
-        <div class="cuotas-wrap">${cuotasHtml}</div>
-      </div>`;
+    return '<div class="factura-card" id="fc-' + id + '">' +
+      '<div class="factura-header" onclick="toggleFactura(\'' + id + '\')">' +
+      '<div class="factura-info">' +
+      '<div class="factura-numero">' + f.factura + '</div>' +
+      producto +
+      '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div>' +
+      '</div>' +
+      '<div class="factura-derecha">' + badge + saldoHtml + '</div>' +
+      '<div class="factura-chevron">⌄</div>' +
+      '</div>' +
+      '<div class="cuotas-wrap">' + cuotasHtml + '</div>' +
+      '</div>';
   }
 
   function renderCuota(c, pagada) {
-    let moraHtml = '';
+    var moraHtml = '';
     if (pagada) {
-      moraHtml = `<span class="cuota-mora al-dia">✓ Pagada</span>`;
+      moraHtml = '<span class="cuota-mora al-dia">✓ Pagada</span>';
     } else if (c.mor > 0) {
-      moraHtml = `<span class="cuota-mora en-mora">⚠ ${c.mor} días mora</span>`;
+      moraHtml = '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>';
     } else if (c.mor >= -7) {
-      moraHtml = `<span class="cuota-mora proximo">Vence en ${Math.abs(c.mor)} días</span>`;
+      moraHtml = '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>';
     } else {
-      moraHtml = `<span class="cuota-mora al-dia">Vence ${c.venc}</span>`;
+      moraHtml = '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
     }
 
-    const saldoHtml = pagada
-      ? `<div class="cuota-saldo pagada">Gs. ${fmt(c.importe)}</div>`
-      : `<div class="cuota-saldo">Gs. ${fmt(c.saldo)}</div>`;
+    var saldoHtml = pagada
+      ? '<div class="cuota-saldo pagada">Gs. ' + fmt(c.importe) + '</div>'
+      : '<div class="cuota-saldo">Gs. ' + fmt(c.saldo) + '</div>';
 
-    return `
-      <div class="cuota-row">
-        <div class="cuota-izq">
-          <div class="cuota-num">Cuota ${c.cta}</div>
-          <div class="cuota-fecha">Venc: ${c.venc}</div>
-        </div>
-        ${moraHtml}
-        <div class="cuota-der">
-          ${saldoHtml}
-          <div class="cuota-importe">Importe: Gs. ${fmt(c.importe)}</div>
-        </div>
-      </div>`;
+    return '<div class="cuota-row">' +
+      '<div class="cuota-izq">' +
+      '<div class="cuota-num">Cuota ' + c.cta + '</div>' +
+      '<div class="cuota-fecha">Venc: ' + c.venc + '</div>' +
+      '</div>' +
+      moraHtml +
+      '<div class="cuota-der">' + saldoHtml +
+      '<div class="cuota-importe">Importe: Gs. ' + fmt(c.importe) + '</div>' +
+      '</div></div>';
   }
 
   function toggleFactura(id) {
-    const card = document.getElementById('fc-' + id);
-    card.classList.toggle('abierta');
+    document.getElementById('fc-' + id).classList.toggle('abierta');
   }
 
   function toggleHistorial() {
-    const wrap = document.getElementById('historial-wrap');
-    const icon = document.getElementById('historial-icon');
-    const visible = wrap.style.display !== 'none';
+    var wrap = document.getElementById('historial-wrap');
+    var icon = document.getElementById('historial-icon');
+    var visible = wrap.style.display !== 'none';
     wrap.style.display = visible ? 'none' : 'block';
     icon.textContent = visible ? '▶' : '▼';
   }
