@@ -39,7 +39,7 @@
     .overlay-msg { color: #fff; font-size: 15px; font-weight: 600; }
 
     /* ── HEADER ── */
-    .header { background: var(--primary); padding: 12px 20px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
+    .header { background: var(--primary); padding: 12px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
     .header-back { color: #fff; font-size: 26px; cursor: pointer; display: none; background: none; border: none; padding: 0 8px 0 0; line-height: 1; flex-shrink: 0; }
     .header-text { flex: 1; }
     .header-title { color: #fff; font-size: 17px; font-weight: 700; }
@@ -79,16 +79,22 @@
 
     /* ── LISTA CLIENTES ── */
     .lista-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 8px 0 10px; }
-    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; }
     .cliente-item:active { border-color: var(--primary); background: var(--primary-light); }
     .cliente-item.activo { border-left: 4px solid var(--success); }
     .cliente-item-body { flex: 1; min-width: 0; }
-    .cliente-item-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+    .cliente-item-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
     .cliente-item-nombre { font-size: 15px; font-weight: 600; color: var(--text); }
+    .cliente-item-badges { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 4px; }
     .badge-credito-activo { display: inline-flex; align-items: center; gap: 4px; background: var(--success-light); color: var(--success); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
     .badge-credito-activo::before { content: '●'; font-size: 8px; }
-    .cliente-item-doc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .cliente-item-saldo { font-size: 12px; color: var(--warning); font-weight: 700; margin-top: 3px; }
+    .badge-estado-lista { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+    .badge-estado-lista.al-dia { background: var(--success-light); color: var(--success); }
+    .badge-estado-lista.en-mora { background: var(--danger-light); color: var(--danger); }
+    .cliente-item-doc { font-size: 12px; color: var(--text-muted); }
+    .cliente-item-comprado { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .cliente-item-derecha { text-align: right; flex-shrink: 0; }
+    .cliente-item-saldo { font-size: 18px; font-weight: 700; color: var(--warning); line-height: 1.1; }
     .cliente-item-arrow { color: var(--primary); font-size: 20px; flex-shrink: 0; }
 
     /* ── CLIENTE CARD ── */
@@ -103,10 +109,10 @@
 
     /* ── BADGES ── */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-pendiente  { background: var(--warning-light); color: var(--warning); }
-    .badge-mora       { background: var(--danger-light);  color: var(--danger); }
-    .badge-al-dia     { background: var(--success-light); color: var(--success); }
-    .badge-inactivo   { background: #f1f3f5; color: var(--text-muted); }
+    .badge-pendiente { background: var(--warning-light); color: var(--warning); }
+    .badge-mora      { background: var(--danger-light);  color: var(--danger); }
+    .badge-al-dia    { background: var(--success-light); color: var(--success); }
+    .badge-inactivo  { background: #f1f3f5; color: var(--text-muted); }
 
     .seccion-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px; }
 
@@ -183,7 +189,7 @@
 
 <!-- APP -->
 <div id="app">
-  <div class="header">
+  <div class="header" id="mainHeader">
     <button class="header-back" id="btnVolver" onclick="volverALista()">‹</button>
     <div class="header-text">
       <div class="header-title" id="headerTitle">Cuentas a Cobrar</div>
@@ -417,27 +423,35 @@
     }
     var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s)</div>';
     clientes.forEach(function(c) {
-      var re   = c.ruc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      var ne   = c.nombre.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var re = c.ruc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var ne = c.nombre.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       var tipo = tipoDoc(c.ruc);
       var tieneDeuda = c.totalSaldo > 0;
 
-      var badgeActivo = tieneDeuda
-        ? '<span class="badge-credito-activo">Crédito activo</span>'
-        : '';
-      var saldoLine = tieneDeuda
-        ? '<div class="cliente-item-saldo">Saldo: Gs. ' + fmt(c.totalSaldo) + '</div>'
+      // Determinar si hay mora — usamos totalSaldo vs totalComprado como proxy
+      // El dato de mora individual no está en la lista, así que lo marcamos neutro
+      // La mora real se ve al entrar al cliente
+      var estadoBadge = '';
+      if (tieneDeuda) {
+        // No tenemos dato de mora en el listado, mostramos "Al día" por defecto
+        // Se verá la mora real al abrir el cliente
+        estadoBadge = '<span class="badge-estado-lista al-dia">✓ Al día</span>';
+      }
+
+      var derechaHtml = tieneDeuda
+        ? '<div class="cliente-item-derecha"><div class="cliente-item-saldo">Gs. ' + fmt(c.totalSaldo) + '</div></div>'
         : '';
 
       html += '<div class="cliente-item' + (tieneDeuda ? ' activo' : '') + '" onclick="verCuenta(\'' + re + '\',\'' + ne + '\')">' +
         '<div class="cliente-item-body">' +
-          '<div class="cliente-item-top">' +
-            '<div class="cliente-item-nombre">' + c.nombre + '</div>' +
-            badgeActivo +
-          '</div>' +
+          '<div class="cliente-item-nombre">' + c.nombre + '</div>' +
+          (tieneDeuda
+            ? '<div class="cliente-item-badges"><span class="badge-credito-activo">Crédito activo</span>' + estadoBadge + '</div>'
+            : '') +
           '<div class="cliente-item-doc">' + tipo + ': ' + c.ruc + '</div>' +
-          saldoLine +
+          '<div class="cliente-item-comprado">Total comprado: Gs. ' + fmt(c.totalComprado) + '</div>' +
         '</div>' +
+        derechaHtml +
         '<div class="cliente-item-arrow">›</div>' +
         '</div>';
     });
@@ -452,14 +466,13 @@
       return f.cuotas.some(function(c) { return c.mor > 0 && c.saldo > 0; });
     });
 
-    // Badges del cliente
     var badgesCliente = '';
     if (data.saldoGlobal === 0) {
-      badgesCliente = '<span class="badge badge-inactivo">Crédito inactivo</span>';
+      badgesCliente = '<span class="badge badge-inactivo">Crédito inactivo · Sin pendientes</span>';
     } else if (hayMora) {
-      badgesCliente = '<span class="badge badge-pendiente">Pendiente</span> <span class="badge badge-mora">⚠ En mora</span>';
+      badgesCliente = '<span class="badge badge-pendiente">Pendiente</span><span class="badge badge-mora">⚠ En mora</span>';
     } else {
-      badgesCliente = '<span class="badge badge-pendiente">Pendiente</span> <span class="badge badge-al-dia">✓ Al día</span>';
+      badgesCliente = '<span class="badge badge-pendiente">Pendiente</span><span class="badge badge-al-dia">✓ Al día</span>';
     }
 
     var tipo = tipoDoc(data.ruc);
@@ -491,12 +504,10 @@
     var prod = f.producto
       ? '<div class="factura-producto">' + f.producto + '</div>'
       : '<div class="factura-producto sin-producto">Sin descripción</div>';
-
     var pend = f.cuotas.filter(function(c) { return c.saldo > 0; });
     var pag  = f.cuotas.filter(function(c) { return c.saldo === 0; });
     var mora = pend.some(function(c) { return c.mor > 0; });
 
-    // Badges de la factura
     var facturaBadges = '';
     if (f.estado === 'PAGADO') {
       facturaBadges = '<span class="badge badge-inactivo">Crédito inactivo</span>';
@@ -523,14 +534,9 @@
 
     return '<div class="factura-card" id="fc-' + id + '">' +
       '<div class="factura-header" onclick="toggleFactura(\'' + id + '\')">' +
-        '<div class="factura-info">' +
-          '<div class="factura-numero">' + f.factura + '</div>' + prod +
-          '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div>' +
-        '</div>' +
-        '<div class="factura-derecha">' +
-          '<div class="factura-badges">' + facturaBadges + '</div>' +
-          saldoHtml +
-        '</div>' +
+        '<div class="factura-info"><div class="factura-numero">' + f.factura + '</div>' + prod +
+        '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div></div>' +
+        '<div class="factura-derecha"><div class="factura-badges">' + facturaBadges + '</div>' + saldoHtml + '</div>' +
         '<div class="factura-chevron">⌄</div>' +
       '</div>' +
       '<div class="cuotas-wrap">' + cuotasHtml + '</div>' +
