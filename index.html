@@ -8,163 +8,106 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f0f4f8;
-      --surface: #ffffff;
-      --primary: #1847C8;
-      --primary-light: #e8eefb;
-      --danger: #e03131;
-      --danger-light: #fff0f0;
-      --success: #2f9e44;
-      --success-light: #ebfbee;
-      --warning: #f08c00;
-      --warning-light: #fff8e6;
-      --text: #1a1a2e;
-      --text-muted: #6b7280;
-      --border: #e2e8f0;
-      --radius: 14px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --bg: #f0f4f8; --surface: #ffffff; --primary: #1847C8;
+      --primary-light: #e8eefb; --danger: #e03131; --danger-light: #fff0f0;
+      --success: #2f9e44; --success-light: #ebfbee; --warning: #f08c00;
+      --warning-light: #fff8e6; --text: #1a1a2e; --text-muted: #6b7280;
+      --border: #e2e8f0; --radius: 14px; --shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
     /* PIN */
     #pin-screen {
       position: fixed; inset: 0; background: var(--primary);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 1000; gap: 24px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; z-index: 1000; gap: 24px;
     }
     .pin-logo { color: #fff; font-size: 22px; font-weight: 700; text-align: center; }
     .pin-logo span { display: block; font-size: 13px; font-weight: 400; opacity: 0.7; margin-top: 4px; }
     .pin-dots { display: flex; gap: 14px; }
-    .pin-dot {
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.6);
-      background: transparent; transition: background 0.15s;
-    }
+    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); background: transparent; transition: background 0.15s; }
     .pin-dot.filled { background: #fff; border-color: #fff; }
-    .pin-error { color: rgba(255,100,100,0.9); font-size: 13px; font-weight: 500; height: 18px; }
-    .pin-grid {
-      display: grid; grid-template-columns: repeat(3, 72px);
-      gap: 12px;
-    }
-    .pin-btn {
-      height: 72px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.1); color: #fff;
-      font-family: inherit; font-size: 22px; font-weight: 600;
-      cursor: pointer; transition: background 0.15s;
-    }
+    .pin-error { color: rgba(255,120,120,0.95); font-size: 13px; font-weight: 500; height: 18px; }
+    .pin-grid { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
+    .pin-btn { height: 72px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; font-family: inherit; font-size: 22px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .pin-btn:active { background: rgba(255,255,255,0.25); }
     .pin-btn.del { font-size: 18px; }
     .pin-btn.empty { border: none; background: transparent; cursor: default; }
 
-    /* OVERLAY CARGA */
+    /* OVERLAY */
     #overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      position: fixed; inset: 0; z-index: 500;
       display: none; align-items: center; justify-content: center;
-      z-index: 500; flex-direction: column; gap: 14px;
+      flex-direction: column; gap: 14px;
     }
     #overlay.visible { display: flex; }
-    .overlay-spinner {
-      width: 44px; height: 44px;
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
+    .overlay-blur {
+      position: absolute; inset: 0;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      background: rgba(10, 20, 60, 0.45);
     }
+    .overlay-box {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 18px; padding: 28px 36px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .overlay-spinner { width: 44px; height: 44px; border: 4px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
     .overlay-msg { color: #fff; font-size: 15px; font-weight: 600; }
 
     /* HEADER */
-    .header {
-      background: var(--primary); padding: 18px 20px;
-      display: flex; align-items: center; gap: 10px;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 8px rgba(24,71,200,0.3);
-    }
-    .header-back {
-      color: #fff; font-size: 26px; cursor: pointer;
-      display: none; background: none; border: none;
-      padding: 0 8px 0 0; line-height: 1; flex-shrink: 0;
-    }
+    .header { background: var(--primary); padding: 18px 20px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
+    .header-back { color: #fff; font-size: 26px; cursor: pointer; display: none; background: none; border: none; padding: 0 8px 0 0; line-height: 1; flex-shrink: 0; }
     .header-title { color: #fff; font-size: 17px; font-weight: 700; }
     .header-sub { color: rgba(255,255,255,0.7); font-size: 12px; }
 
-    /* APP */
     #app { display: none; }
 
     /* SEARCH */
     .search-wrap { padding: 20px 16px 12px; }
-    .search-box {
-      display: flex; gap: 10px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 10px 14px;
-      align-items: center; box-shadow: var(--shadow);
-      transition: border-color 0.2s;
-    }
+    .search-box { display: flex; gap: 10px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; align-items: center; box-shadow: var(--shadow); transition: border-color 0.2s; }
     .search-box:focus-within { border-color: var(--primary); }
-    .search-box input {
-      flex: 1; border: none; outline: none;
-      font-family: inherit; font-size: 15px;
-      color: var(--text); background: transparent;
-    }
+    .search-box input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 15px; color: var(--text); background: transparent; }
     .search-box input::placeholder { color: var(--text-muted); }
-    .btn-clear {
-      background: none; border: none; cursor: pointer;
-      color: var(--text-muted); font-size: 18px; padding: 0 4px;
-      display: none; line-height: 1;
-    }
-    .btn-search {
-      background: var(--primary); color: #fff; border: none;
-      border-radius: 9px; padding: 8px 18px;
-      font-family: inherit; font-size: 14px; font-weight: 600;
-      cursor: pointer; white-space: nowrap;
-    }
-    .btn-search:disabled { background: #9ab0e8; cursor: not-allowed; }
+    .btn-clear { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 18px; padding: 0 4px; display: none; line-height: 1; }
 
     /* DASHBOARD */
     .dashboard { padding: 0 16px 8px; }
-    .dash-titulo {
-      font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px;
-    }
+    .dash-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
     .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-    .dash-card {
-      background: var(--surface); border-radius: var(--radius);
-      padding: 14px; box-shadow: var(--shadow); border: 1.5px solid var(--border);
-    }
+    .dash-card { background: var(--surface); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); border: 1.5px solid var(--border); position: relative; }
     .dash-card.full { grid-column: 1 / -1; }
-    .dash-card-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .dash-card-valor { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .dash-card-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; padding-right: 22px; }
+    .dash-card-valor { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
     .dash-card-valor.danger { color: var(--danger); }
     .dash-card-valor.success { color: var(--success); }
+    .dash-card-valor.warning { color: var(--warning); }
     .progress-wrap { background: var(--border); border-radius: 6px; height: 8px; overflow: hidden; }
     .progress-bar { height: 100%; border-radius: 6px; transition: width 1s ease; }
     .progress-bar.success { background: var(--success); }
     .progress-bar.warning { background: var(--warning); }
     .progress-bar.danger { background: var(--danger); }
     .dash-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+    .dash-info-btn { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    /* TOOLTIP */
+    .tooltip-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .tooltip-box { background: var(--surface); border-radius: var(--radius); padding: 20px; max-width: 320px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .tooltip-titulo { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .tooltip-texto { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .tooltip-cerrar { margin-top: 16px; width: 100%; padding: 10px; background: var(--primary); color: #fff; border: none; border-radius: 9px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
 
     /* CONTENT */
     .content { padding: 0 16px 32px; }
     .estado-msg { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 14px; }
     .estado-msg .icon { font-size: 36px; margin-bottom: 10px; }
-    .error-msg {
-      background: var(--danger-light); color: var(--danger);
-      border-radius: var(--radius); padding: 14px 16px;
-      font-size: 14px; font-weight: 500; margin-top: 8px;
-    }
+    .error-msg { background: var(--danger-light); color: var(--danger); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; }
 
-    /* LISTA CLIENTES */
-    .lista-titulo {
-      font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.8px; color: var(--text-muted); margin: 8px 0 10px;
-    }
-    .cliente-item {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
-      cursor: pointer; box-shadow: var(--shadow);
-      display: flex; justify-content: space-between; align-items: center;
-      transition: border-color 0.15s;
-    }
+    /* LISTA */
+    .lista-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 8px 0 10px; }
+    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; transition: border-color 0.15s; }
     .cliente-item:active { border-color: var(--primary); background: var(--primary-light); }
     .cliente-item-nombre { font-size: 15px; font-weight: 600; color: var(--text); }
     .cliente-item-ruc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
@@ -172,41 +115,24 @@
     .cliente-item-arrow { color: var(--primary); font-size: 20px; flex-shrink: 0; }
 
     /* CLIENTE CARD */
-    .cliente-card {
-      background: var(--primary); border-radius: var(--radius);
-      padding: 20px; margin-bottom: 20px; color: #fff;
-    }
+    .cliente-card { background: var(--primary); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; color: #fff; }
     .cliente-nombre { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
-    .cliente-ruc { font-size: 12px; opacity: 0.75; margin-bottom: 6px; }
+    .cliente-ruc { font-size: 12px; opacity: 0.75; margin-bottom: 4px; }
     .cliente-total-comprado { font-size: 12px; opacity: 0.85; margin-bottom: 14px; }
     .saldo-global-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.8; margin-bottom: 4px; }
     .saldo-global-monto { font-size: 28px; font-weight: 700; }
     .saldo-global-monto.cero { opacity: 0.6; }
 
-    .badge {
-      display: inline-block; padding: 3px 10px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.5px; margin-bottom: 10px;
-    }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
     .badge-pendiente { background: var(--warning-light); color: var(--warning); }
     .badge-mora { background: var(--danger-light); color: var(--danger); }
     .badge-pagado { background: var(--success-light); color: var(--success); }
 
-    .seccion-titulo {
-      font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px;
-    }
+    .seccion-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px; }
 
     /* FACTURA */
-    .factura-card {
-      background: var(--surface); border-radius: var(--radius);
-      box-shadow: var(--shadow); margin-bottom: 14px;
-      overflow: hidden; border: 1.5px solid var(--border);
-    }
-    .factura-header {
-      padding: 14px 16px; display: flex; justify-content: space-between;
-      align-items: flex-start; cursor: pointer; user-select: none; gap: 10px;
-    }
+    .factura-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; border: 1.5px solid var(--border); }
+    .factura-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; user-select: none; gap: 10px; }
     .factura-header:active { background: #f8fafc; }
     .factura-info { flex: 1; min-width: 0; }
     .factura-numero { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
@@ -219,17 +145,10 @@
     .factura-saldo-total { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .factura-chevron { font-size: 18px; color: var(--text-muted); transition: transform 0.25s; margin-top: 2px; }
     .factura-card.abierta .factura-chevron { transform: rotate(180deg); }
-
     .cuotas-wrap { display: none; border-top: 1.5px solid var(--border); }
     .factura-card.abierta .cuotas-wrap { display: block; }
-    .cuotas-subtitulo {
-      padding: 10px 16px 6px; font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted);
-    }
-    .cuota-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 16px; border-top: 1px solid var(--border); gap: 8px;
-    }
+    .cuotas-subtitulo { padding: 10px 16px 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-muted); }
+    .cuota-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-top: 1px solid var(--border); gap: 8px; }
     .cuota-izq { flex: 1; min-width: 0; }
     .cuota-num { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
     .cuota-fecha { font-size: 12px; color: var(--text-muted); }
@@ -241,13 +160,7 @@
     .cuota-saldo { font-size: 14px; font-weight: 700; color: var(--text); }
     .cuota-saldo.pagada { color: var(--success); font-size: 12px; }
     .cuota-importe { font-size: 11px; color: var(--text-muted); }
-
-    .historial-toggle {
-      background: none; border: 1.5px solid var(--border); border-radius: 10px;
-      padding: 10px 16px; width: 100%; font-family: inherit; font-size: 13px;
-      font-weight: 600; color: var(--text-muted); cursor: pointer; margin-bottom: 10px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
+    .historial-toggle { background: none; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 16px; width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
     .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(24,71,200,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -259,10 +172,8 @@
 <div id="pin-screen">
   <div class="pin-logo">🏪 TECH MARKET<span>Cuentas a Cobrar</span></div>
   <div class="pin-dots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
   </div>
   <div class="pin-error" id="pin-error"></div>
   <div class="pin-grid">
@@ -283,8 +194,11 @@
 
 <!-- OVERLAY -->
 <div id="overlay">
-  <div class="overlay-spinner"></div>
-  <div class="overlay-msg" id="overlay-msg">Cargando...</div>
+  <div class="overlay-blur"></div>
+  <div class="overlay-box">
+    <div class="overlay-spinner"></div>
+    <div class="overlay-msg" id="overlay-msg">Cargando...</div>
+  </div>
 </div>
 
 <!-- APP -->
@@ -299,51 +213,54 @@
 
   <div id="searchWrap" class="search-wrap">
     <div class="search-box">
-      <input type="text" id="inputBuscar" placeholder="Nombre o RUC del cliente..." autocomplete="off" />
+      <input type="text" id="inputBuscar" placeholder="Filtrar por nombre o RUC..." autocomplete="off" />
       <button class="btn-clear" id="btnClear" onclick="limpiarBusqueda()">✕</button>
-      <button class="btn-search" id="btnBuscar" onclick="buscarClientes()">Buscar</button>
     </div>
   </div>
 
   <div id="dashboard" class="dashboard"></div>
   <div class="content" id="content">
-    <div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>
+    <div class="estado-msg"><div class="icon">⏳</div>Cargando lista de clientes...</div>
+  </div>
+</div>
+
+<!-- TOOLTIP -->
+<div id="tooltip-overlay" class="tooltip-overlay" style="display:none" onclick="cerrarTooltip()">
+  <div class="tooltip-box" onclick="event.stopPropagation()">
+    <div class="tooltip-titulo" id="tooltip-titulo"></div>
+    <div class="tooltip-texto" id="tooltip-texto"></div>
+    <button class="tooltip-cerrar" onclick="cerrarTooltip()">Entendido</button>
   </div>
 </div>
 
 <script>
-  const API = 'https://script.google.com/macros/s/AKfycbxdLbaFL-btGf1uCu8f_z4w8QRoMqRBQWPGXQLm8oMjQHKGWY1TehrKGarM_bj4--d4/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbzZpu0AqlL0q06hlz1oAEzaBiN5B9DjqxOKehjITgZV3muHVyY5QX6anFbGBoSfUoUT/exec';
   const PIN_CORRECTO = '2011';
   var pinActual = '';
-  var ultimaBusqueda = '';
+  var todosLosClientes = [];
+  var dashboardData = null;
 
   // ── PIN ──────────────────────────────────────────────────────────────────
   function pinPress(n) {
     if (pinActual.length >= 4) return;
     pinActual += n;
     actualizarDots();
-    if (pinActual.length === 4) {
-      setTimeout(verificarPin, 150);
-    }
+    if (pinActual.length === 4) setTimeout(verificarPin, 150);
   }
-
   function pinDel() {
     pinActual = pinActual.slice(0, -1);
     actualizarDots();
     document.getElementById('pin-error').textContent = '';
   }
-
   function actualizarDots() {
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 4; i++)
       document.getElementById('d' + i).classList.toggle('filled', i < pinActual.length);
-    }
   }
-
   function verificarPin() {
     if (pinActual === PIN_CORRECTO) {
       document.getElementById('pin-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
-      cargarDashboard();
+      cargarInicial();
     } else {
       document.getElementById('pin-error').textContent = 'PIN incorrecto';
       pinActual = '';
@@ -356,9 +273,18 @@
     document.getElementById('overlay-msg').textContent = msg || 'Cargando...';
     document.getElementById('overlay').classList.add('visible');
   }
-
   function ocultarOverlay() {
     document.getElementById('overlay').classList.remove('visible');
+  }
+
+  // ── TOOLTIP ──────────────────────────────────────────────────────────────
+  function mostrarTooltip(titulo, texto) {
+    document.getElementById('tooltip-titulo').textContent = titulo;
+    document.getElementById('tooltip-texto').textContent = texto;
+    document.getElementById('tooltip-overlay').style.display = 'flex';
+  }
+  function cerrarTooltip() {
+    document.getElementById('tooltip-overlay').style.display = 'none';
   }
 
   // ── API ──────────────────────────────────────────────────────────────────
@@ -366,7 +292,6 @@
     var qs = Object.keys(params).map(function(k) {
       return k + '=' + encodeURIComponent(params[k]);
     }).join('&');
-
     var cbName = 'cb_' + Date.now();
     var script = document.createElement('script');
     window[cbName] = function(data) {
@@ -385,41 +310,58 @@
     document.body.appendChild(script);
   }
 
-  // ── SEARCH ───────────────────────────────────────────────────────────────
+  // ── CARGA INICIAL ────────────────────────────────────────────────────────
+  function cargarInicial() {
+    mostrarOverlay('Cargando datos...');
+    var dashListo = false, clientesListo = false;
+
+    llamarAPI({ accion: 'dashboard' }, function(data) {
+      dashboardData = data;
+      dashListo = true;
+      if (!data.error) renderDashboard(data);
+      if (dashListo && clientesListo) ocultarOverlay();
+    });
+
+    llamarAPI({ accion: 'listarClientes' }, function(data) {
+      clientesListo = true;
+      if (!data.error) {
+        todosLosClientes = data.clientes;
+        renderLista(todosLosClientes);
+      } else {
+        mostrarError(data.error);
+      }
+      if (dashListo && clientesListo) ocultarOverlay();
+    });
+  }
+
+  // ── BUSCADOR EN TIEMPO REAL ──────────────────────────────────────────────
   document.getElementById('inputBuscar').addEventListener('input', function() {
-    var val = this.value;
+    var val = this.value.trim();
     document.getElementById('btnClear').style.display = val ? 'block' : 'none';
-    if (!val) {
-      document.getElementById('content').innerHTML =
-        '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
-      ultimaBusqueda = '';
-    }
+    filtrarLista(val);
   });
 
-  document.getElementById('inputBuscar').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') buscarClientes();
-  });
+  function filtrarLista(q) {
+    if (!q) {
+      renderLista(todosLosClientes);
+      return;
+    }
+    var qUp = q.toUpperCase();
+    var filtrados = todosLosClientes.filter(function(c) {
+      return c.nombre.toUpperCase().indexOf(qUp) !== -1 ||
+             c.ruc.toUpperCase().indexOf(qUp) !== -1;
+    });
+    renderLista(filtrados);
+  }
 
   function limpiarBusqueda() {
     document.getElementById('inputBuscar').value = '';
     document.getElementById('btnClear').style.display = 'none';
-    document.getElementById('content').innerHTML =
-      '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
-    ultimaBusqueda = '';
+    renderLista(todosLosClientes);
     document.getElementById('inputBuscar').focus();
   }
 
-  function buscarClientes() {
-    var q = document.getElementById('inputBuscar').value.trim();
-    if (!q) return;
-    ultimaBusqueda = q;
-    mostrarOverlay('Buscando clientes...');
-    llamarAPI({ accion: 'buscarClientes', q: q.toUpperCase() }, function(data) {
-      if (data.error) { mostrarError(data.error); return; }
-      renderLista(data.clientes);
-    });
-  }
-
+  // ── VER CUENTA ───────────────────────────────────────────────────────────
   function verCuenta(ruc, nombre) {
     mostrarOverlay('Cargando estado de cuenta...');
     document.getElementById('headerTitle').textContent = nombre;
@@ -439,24 +381,13 @@
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('inputBuscar').value = '';
     document.getElementById('btnClear').style.display = 'none';
-    ultimaBusqueda = '';
-    document.getElementById('content').innerHTML =
-      '<div class="estado-msg"><div class="icon">🔍</div>Buscá un cliente para ver su estado de cuenta</div>';
+    renderLista(todosLosClientes);
   }
 
   // ── DASHBOARD ────────────────────────────────────────────────────────────
-  function cargarDashboard() {
-    mostrarOverlay('Cargando datos...');
-    llamarAPI({ accion: 'dashboard' }, function(data) {
-      if (data.error) { document.getElementById('dashboard').innerHTML = ''; return; }
-      renderDashboard(data);
-    });
-  }
-
   function renderDashboard(d) {
     var mes = d.mes, mora = d.mora, cartera = d.cartera;
     var colorMes = mes.porcentaje >= 80 ? 'success' : mes.porcentaje >= 50 ? 'warning' : 'danger';
-    var colorMora = mora.porcentaje <= 10 ? 'success' : mora.porcentaje <= 25 ? 'warning' : 'danger';
     var colorCartera = cartera.porcentaje >= 80 ? 'success' : cartera.porcentaje >= 50 ? 'warning' : 'danger';
 
     document.getElementById('dashboard').innerHTML =
@@ -464,6 +395,7 @@
       '<div class="dash-grid">' +
 
       '<div class="dash-card">' +
+        '<button class="dash-info-btn" onclick="mostrarTooltip(\'Cobro del mes\',\'' + escapar(mes.detalle) + '\')">i</button>' +
         '<div class="dash-card-label">Cobro del mes</div>' +
         '<div class="dash-card-valor ' + colorMes + '">Gs. ' + fmt(mes.realizado) + '</div>' +
         '<div class="progress-wrap"><div class="progress-bar ' + colorMes + '" style="width:' + Math.min(mes.porcentaje, 100) + '%"></div></div>' +
@@ -471,6 +403,7 @@
       '</div>' +
 
       '<div class="dash-card">' +
+        '<button class="dash-info-btn" onclick="mostrarTooltip(\'Mora activa\',\'' + escapar(mora.detalle) + '\')">i</button>' +
         '<div class="dash-card-label">Mora activa</div>' +
         '<div class="dash-card-valor danger">Gs. ' + fmt(mora.monto) + '</div>' +
         '<div class="progress-wrap"><div class="progress-bar danger" style="width:' + Math.min(mora.porcentaje, 100) + '%"></div></div>' +
@@ -478,6 +411,7 @@
       '</div>' +
 
       '<div class="dash-card full">' +
+        '<button class="dash-info-btn" onclick="mostrarTooltip(\'Cartera vencida\',\'' + escapar(cartera.detalle) + '\')">i</button>' +
         '<div class="dash-card-label">Cartera vencida hasta hoy</div>' +
         '<div class="dash-card-valor ' + colorCartera + '">Gs. ' + fmt(cartera.cobrado) + ' cobrado</div>' +
         '<div class="progress-wrap"><div class="progress-bar ' + colorCartera + '" style="width:' + Math.min(cartera.porcentaje, 100) + '%"></div></div>' +
@@ -494,12 +428,17 @@
 
   function fmt(n) { return Number(n).toLocaleString('es-PY'); }
 
+  function escapar(str) {
+    return str.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+  }
+
   function renderLista(clientes) {
     if (!clientes || clientes.length === 0) {
-      mostrarError('No se encontraron clientes.');
+      document.getElementById('content').innerHTML =
+        '<div class="estado-msg"><div class="icon">🔍</div>No se encontraron clientes.</div>';
       return;
     }
-    var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s) encontrado(s)</div>';
+    var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s)</div>';
     clientes.forEach(function(c) {
       var rucEsc = c.ruc.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
       var nomEsc = c.nombre.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
@@ -521,7 +460,6 @@
     var hayMora = pendientes.some(function(f) {
       return f.cuotas.some(function(c) { return c.mor > 0 && c.saldo > 0; });
     });
-
     var badge = data.saldoGlobal === 0
       ? '<span class="badge badge-pagado">✓ Al día</span>'
       : hayMora ? '<span class="badge badge-mora">⚠ En mora</span>'
@@ -541,16 +479,13 @@
       html += '<div class="seccion-titulo">Facturas pendientes (' + pendientes.length + ')</div>';
       pendientes.forEach(function(f, i) { html += renderFactura(f, 'p' + i); });
     }
-
     if (pagadas.length > 0) {
       html += '<button class="historial-toggle" onclick="toggleHistorial()">' +
         '<span id="hist-icon">▶</span> Ver historial pagado (' + pagadas.length + ')</button>' +
-        '<div id="historial-wrap" style="display:none">' +
-        '<div class="seccion-titulo">Historial pagado</div>';
+        '<div id="historial-wrap" style="display:none"><div class="seccion-titulo">Historial pagado</div>';
       pagadas.forEach(function(f, i) { html += renderFactura(f, 'h' + i); });
       html += '</div>';
     }
-
     document.getElementById('content').innerHTML = html;
   }
 
@@ -558,21 +493,17 @@
     var prod = f.producto
       ? '<div class="factura-producto">' + f.producto + '</div>'
       : '<div class="factura-producto sin-producto">Sin descripción</div>';
-
     var pend = f.cuotas.filter(function(c) { return c.saldo > 0; });
     var pag = f.cuotas.filter(function(c) { return c.saldo === 0; });
     var mora = pend.some(function(c) { return c.mor > 0; });
-
     var badge = f.estado === 'PAGADO'
       ? '<span class="badge badge-pagado">Pagado</span>'
       : mora ? '<span class="badge badge-mora">En mora</span>'
       : '<span class="badge badge-pendiente">Pendiente</span>';
-
     var saldoHtml = f.estado === 'PAGADO'
       ? '<div class="factura-saldo pagado">✓ Saldado</div>'
       : '<div class="factura-saldo">Saldo: Gs. ' + fmt(f.totalSaldo) + '</div>' +
         '<div class="factura-saldo-total">Total: Gs. ' + fmt(f.totalImporte) + '</div>';
-
     var cuotasHtml = '';
     if (pend.length > 0) {
       cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pendientes</div>';
@@ -582,13 +513,10 @@
       cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pagadas</div>';
       pag.forEach(function(c) { cuotasHtml += renderCuota(c, true); });
     }
-
     return '<div class="factura-card" id="fc-' + id + '">' +
       '<div class="factura-header" onclick="toggleFactura(\'' + id + '\')">' +
-        '<div class="factura-info">' +
-          '<div class="factura-numero">' + f.factura + '</div>' + prod +
-          '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div>' +
-        '</div>' +
+        '<div class="factura-info"><div class="factura-numero">' + f.factura + '</div>' + prod +
+          '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div></div>' +
         '<div class="factura-derecha">' + badge + saldoHtml + '</div>' +
         '<div class="factura-chevron">⌄</div>' +
       '</div>' +
@@ -599,26 +527,22 @@
   function renderCuota(c, pagada) {
     var moraHtml = pagada
       ? '<span class="cuota-mora al-dia">✓ Pagada</span>'
-      : c.mor > 0
-        ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
-        : c.mor >= -7
-          ? '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>'
-          : '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
-
+      : c.mor > 0 ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
+      : c.mor >= -7 ? '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>'
+      : '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
     var saldoHtml = pagada
       ? '<div class="cuota-saldo pagada">Gs. ' + fmt(c.importe) + '</div>'
       : '<div class="cuota-saldo">Gs. ' + fmt(c.saldo) + '</div>';
-
     return '<div class="cuota-row">' +
-      '<div class="cuota-izq"><div class="cuota-num">Cuota ' + c.cta + '</div><div class="cuota-fecha">Venc: ' + c.venc + '</div></div>' +
+      '<div class="cuota-izq"><div class="cuota-num">Cuota ' + c.cta + '</div>' +
+      '<div class="cuota-fecha">Venc: ' + c.venc + '</div></div>' +
       moraHtml +
-      '<div class="cuota-der">' + saldoHtml + '<div class="cuota-importe">Importe: Gs. ' + fmt(c.importe) + '</div></div>' +
+      '<div class="cuota-der">' + saldoHtml +
+      '<div class="cuota-importe">Importe: Gs. ' + fmt(c.importe) + '</div></div>' +
       '</div>';
   }
 
-  function toggleFactura(id) {
-    document.getElementById('fc-' + id).classList.toggle('abierta');
-  }
+  function toggleFactura(id) { document.getElementById('fc-' + id).classList.toggle('abierta'); }
 
   function toggleHistorial() {
     var w = document.getElementById('historial-wrap');
