@@ -17,11 +17,7 @@
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
     /* ── PIN ── */
-    #pin-screen {
-      position: fixed; inset: 0; background: var(--primary);
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; z-index: 1000; gap: 24px;
-    }
+    #pin-screen { position: fixed; inset: 0; background: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; gap: 24px; }
     .pin-logo { color: #fff; font-size: 22px; font-weight: 700; text-align: center; }
     .pin-logo span { display: block; font-size: 13px; font-weight: 400; opacity: 0.7; margin-top: 4px; }
     .pin-dots { display: flex; gap: 14px; }
@@ -81,13 +77,18 @@
     .estado-msg .icon { font-size: 36px; margin-bottom: 10px; }
     .error-msg { background: var(--danger-light); color: var(--danger); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; }
 
-    /* ── LISTA ── */
+    /* ── LISTA CLIENTES ── */
     .lista-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 8px 0 10px; }
-    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
+    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .cliente-item:active { border-color: var(--primary); background: var(--primary-light); }
+    .cliente-item.activo { border-left: 4px solid var(--success); }
+    .cliente-item-body { flex: 1; min-width: 0; }
+    .cliente-item-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
     .cliente-item-nombre { font-size: 15px; font-weight: 600; color: var(--text); }
+    .badge-credito-activo { display: inline-flex; align-items: center; gap: 4px; background: var(--success-light); color: var(--success); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+    .badge-credito-activo::before { content: '●'; font-size: 8px; }
     .cliente-item-doc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .cliente-item-total { font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+    .cliente-item-saldo { font-size: 12px; color: var(--warning); font-weight: 700; margin-top: 3px; }
     .cliente-item-arrow { color: var(--primary); font-size: 20px; flex-shrink: 0; }
 
     /* ── CLIENTE CARD ── */
@@ -95,18 +96,21 @@
     .cliente-nombre { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
     .cliente-doc { font-size: 12px; opacity: 0.75; margin-bottom: 4px; }
     .cliente-total-comprado { font-size: 12px; opacity: 0.85; margin-bottom: 14px; }
+    .badges-wrap { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
     .saldo-global-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.8; margin-bottom: 4px; }
     .saldo-global-monto { font-size: 28px; font-weight: 700; }
     .saldo-global-monto.cero { opacity: 0.6; }
 
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-    .badge-pendiente { background: var(--warning-light); color: var(--warning); }
-    .badge-mora { background: var(--danger-light); color: var(--danger); }
-    .badge-pagado { background: var(--success-light); color: var(--success); }
+    /* ── BADGES ── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-pendiente  { background: var(--warning-light); color: var(--warning); }
+    .badge-mora       { background: var(--danger-light);  color: var(--danger); }
+    .badge-al-dia     { background: var(--success-light); color: var(--success); }
+    .badge-inactivo   { background: #f1f3f5; color: var(--text-muted); }
 
     .seccion-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px; }
 
-    /* ── FACTURA ── */
+    /* ── FACTURAS ── */
     .factura-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; border: 1.5px solid var(--border); }
     .factura-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; user-select: none; gap: 10px; }
     .factura-header:active { background: #f8fafc; }
@@ -116,6 +120,7 @@
     .factura-producto.sin-producto { color: var(--text-muted); font-style: italic; font-weight: 400; }
     .factura-meta { font-size: 12px; color: var(--text-muted); }
     .factura-derecha { text-align: right; flex-shrink: 0; }
+    .factura-badges { display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap; margin-bottom: 4px; }
     .factura-saldo { font-size: 15px; font-weight: 700; color: var(--text); }
     .factura-saldo.pagado { color: var(--success); }
     .factura-saldo-total { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
@@ -224,15 +229,10 @@
   setInterval(tickReloj, 1000);
   tickReloj();
 
-  // ── SESIÓN (sessionStorage — dura mientras la pestaña esté abierta) ──────
-  function sesionActiva() {
-    return sessionStorage.getItem(SESSION_KEY) === '1';
-  }
-  function iniciarSesion() {
-    sessionStorage.setItem(SESSION_KEY, '1');
-  }
+  // ── SESIÓN ───────────────────────────────────────────────────────────────
+  function sesionActiva() { return sessionStorage.getItem(SESSION_KEY) === '1'; }
+  function iniciarSesion() { sessionStorage.setItem(SESSION_KEY, '1'); }
 
-  // ── INICIO ───────────────────────────────────────────────────────────────
   window.addEventListener('load', function() {
     if (sesionActiva()) {
       document.getElementById('pin-screen').style.display = 'none';
@@ -284,7 +284,7 @@
     var qs = Object.keys(params).map(function(k) {
       return k + '=' + encodeURIComponent(params[k]);
     }).join('&');
-    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
     var script = document.createElement('script');
     window[cbName] = function(data) {
       delete window[cbName];
@@ -305,17 +305,14 @@
   function cargarInicial() {
     mostrarOverlay('Cargando datos...');
     var resumenListo = false, clientesListo = false;
-
     function intentarOcultar() {
       if (resumenListo && clientesListo) ocultarOverlay();
     }
-
     llamarAPI({ accion: 'resumen' }, function(data) {
       resumenListo = true;
       if (!data.error) renderResumen(data);
       intentarOcultar();
     });
-
     llamarAPI({ accion: 'listarClientes' }, function(data) {
       clientesListo = true;
       if (!data.error) {
@@ -328,12 +325,12 @@
     });
   }
 
-  // ── BUSCADOR EN TIEMPO REAL ──────────────────────────────────────────────
+  // ── BUSCADOR ─────────────────────────────────────────────────────────────
   document.getElementById('inputBuscar').addEventListener('input', function() {
     var val = this.value.trim();
     document.getElementById('btnClear').style.display = val ? 'block' : 'none';
-    var qUp = val.toUpperCase();
     if (!val) { renderLista(todosLosClientes); return; }
+    var qUp = val.toUpperCase();
     var filtrados = todosLosClientes.filter(function(c) {
       return c.nombre.toUpperCase().indexOf(qUp) !== -1 ||
              c.ruc.toUpperCase().indexOf(qUp) !== -1;
@@ -374,22 +371,17 @@
 
   // ── RESUMEN ──────────────────────────────────────────────────────────────
   function renderResumen(d) {
-    var oculto = sessionStorage.getItem('tm_resumen_oculto') === '1';
-
-    // Fecha actualizado en header
     if (d.fechaGenerado) {
       document.getElementById('headerActualizado').textContent = 'Actualizado: ' + d.fechaGenerado;
     }
-
+    var oculto = sessionStorage.getItem('tm_resumen_oculto') === '1';
     document.getElementById('resumen-wrap').innerHTML =
       '<div style="padding:0 16px 8px">' +
         '<div class="resumen-header">' +
           '<div class="resumen-titulo">Resumen de cartera</div>' +
-          '<button class="btn-ocultar" onclick="toggleResumen()">' +
-            (oculto ? '▼ Mostrar' : '▲ Ocultar') +
-          '</button>' +
+          '<button class="btn-ocultar" onclick="toggleResumen()">' + (oculto ? '▼ Mostrar' : '▲ Ocultar') + '</button>' +
         '</div>' +
-        '<div id="resumen-body" style="' + (oculto ? 'display:none' : '') + '">' +
+        '<div id="resumen-body"' + (oculto ? ' style="display:none"' : '') + '>' +
           '<div class="resumen-grid">' +
             '<div class="res-card"><div class="res-label">Total cartera</div><div class="res-valor">Gs. ' + fmt(d.totalCartera) + '</div></div>' +
             '<div class="res-card"><div class="res-label">Total cobrado</div><div class="res-valor success">Gs. ' + fmt(d.totalCobrado) + '</div></div>' +
@@ -401,22 +393,17 @@
   }
 
   function toggleResumen() {
-    var body  = document.getElementById('resumen-body');
+    var body = document.getElementById('resumen-body');
     var oculto = body.style.display === 'none';
     body.style.display = oculto ? '' : 'none';
     sessionStorage.setItem('tm_resumen_oculto', oculto ? '0' : '1');
-    // actualizar texto botón
     var btn = document.querySelector('.btn-ocultar');
     if (btn) btn.textContent = oculto ? '▲ Ocultar' : '▼ Mostrar';
   }
 
   // ── UTILS ────────────────────────────────────────────────────────────────
   function fmt(n) { return Number(n).toLocaleString('es-PY'); }
-
-  function tipoDoc(ruc) {
-    return ruc.indexOf('-') !== -1 ? 'RUC' : 'CI';
-  }
-
+  function tipoDoc(ruc) { return ruc.indexOf('-') !== -1 ? 'RUC' : 'CI'; }
   function mostrarError(msg) {
     document.getElementById('content').innerHTML = '<div class="error-msg">⚠️ ' + msg + '</div>';
   }
@@ -430,14 +417,26 @@
     }
     var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s)</div>';
     clientes.forEach(function(c) {
-      var re = c.ruc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      var ne = c.nombre.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var re   = c.ruc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var ne   = c.nombre.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       var tipo = tipoDoc(c.ruc);
-      html += '<div class="cliente-item" onclick="verCuenta(\'' + re + '\',\'' + ne + '\')">' +
-        '<div>' +
-          '<div class="cliente-item-nombre">' + c.nombre + '</div>' +
+      var tieneDeuda = c.totalSaldo > 0;
+
+      var badgeActivo = tieneDeuda
+        ? '<span class="badge-credito-activo">Crédito activo</span>'
+        : '';
+      var saldoLine = tieneDeuda
+        ? '<div class="cliente-item-saldo">Saldo: Gs. ' + fmt(c.totalSaldo) + '</div>'
+        : '';
+
+      html += '<div class="cliente-item' + (tieneDeuda ? ' activo' : '') + '" onclick="verCuenta(\'' + re + '\',\'' + ne + '\')">' +
+        '<div class="cliente-item-body">' +
+          '<div class="cliente-item-top">' +
+            '<div class="cliente-item-nombre">' + c.nombre + '</div>' +
+            badgeActivo +
+          '</div>' +
           '<div class="cliente-item-doc">' + tipo + ': ' + c.ruc + '</div>' +
-          '<div class="cliente-item-total">Total comprado: Gs. ' + fmt(c.totalComprado) + '</div>' +
+          saldoLine +
         '</div>' +
         '<div class="cliente-item-arrow">›</div>' +
         '</div>';
@@ -452,18 +451,23 @@
     var hayMora    = pendientes.some(function(f) {
       return f.cuotas.some(function(c) { return c.mor > 0 && c.saldo > 0; });
     });
-    var badge = data.saldoGlobal === 0
-      ? '<span class="badge badge-pagado">✓ Al día</span>'
-      : hayMora ? '<span class="badge badge-mora">⚠ En mora</span>'
-      : '<span class="badge badge-pendiente">Saldo pendiente</span>';
+
+    // Badges del cliente
+    var badgesCliente = '';
+    if (data.saldoGlobal === 0) {
+      badgesCliente = '<span class="badge badge-inactivo">Crédito inactivo</span>';
+    } else if (hayMora) {
+      badgesCliente = '<span class="badge badge-pendiente">Pendiente</span> <span class="badge badge-mora">⚠ En mora</span>';
+    } else {
+      badgesCliente = '<span class="badge badge-pendiente">Pendiente</span> <span class="badge badge-al-dia">✓ Al día</span>';
+    }
 
     var tipo = tipoDoc(data.ruc);
     var html = '<div class="cliente-card">' +
       '<div class="cliente-nombre">' + data.nombre + '</div>' +
       '<div class="cliente-doc">' + tipo + ': ' + data.ruc + '</div>' +
       '<div class="cliente-total-comprado">Total comprado: Gs. ' + fmt(data.totalComprado) + '</div>' +
-      badge +
-      '<div style="height:10px"></div>' +
+      '<div class="badges-wrap">' + badgesCliente + '</div>' +
       '<div class="saldo-global-label">Saldo total pendiente</div>' +
       '<div class="saldo-global-monto' + (data.saldoGlobal === 0 ? ' cero' : '') + '">Gs. ' + fmt(data.saldoGlobal) + '</div>' +
       '</div>';
@@ -482,21 +486,31 @@
     document.getElementById('content').innerHTML = html;
   }
 
+  // ── RENDER FACTURA ────────────────────────────────────────────────────────
   function renderFactura(f, id) {
     var prod = f.producto
       ? '<div class="factura-producto">' + f.producto + '</div>'
       : '<div class="factura-producto sin-producto">Sin descripción</div>';
+
     var pend = f.cuotas.filter(function(c) { return c.saldo > 0; });
     var pag  = f.cuotas.filter(function(c) { return c.saldo === 0; });
     var mora = pend.some(function(c) { return c.mor > 0; });
-    var badge = f.estado === 'PAGADO'
-      ? '<span class="badge badge-pagado">Pagado</span>'
-      : mora ? '<span class="badge badge-mora">En mora</span>'
-      : '<span class="badge badge-pendiente">Pendiente</span>';
+
+    // Badges de la factura
+    var facturaBadges = '';
+    if (f.estado === 'PAGADO') {
+      facturaBadges = '<span class="badge badge-inactivo">Crédito inactivo</span>';
+    } else if (mora) {
+      facturaBadges = '<span class="badge badge-pendiente">Pendiente</span><span class="badge badge-mora">⚠ En mora</span>';
+    } else {
+      facturaBadges = '<span class="badge badge-pendiente">Pendiente</span><span class="badge badge-al-dia">✓ Al día</span>';
+    }
+
     var saldoHtml = f.estado === 'PAGADO'
       ? '<div class="factura-saldo pagado">✓ Saldado</div>'
       : '<div class="factura-saldo">Saldo: Gs. ' + fmt(f.totalSaldo) + '</div>' +
         '<div class="factura-saldo-total">Total: Gs. ' + fmt(f.totalImporte) + '</div>';
+
     var cuotasHtml = '';
     if (pend.length > 0) {
       cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pendientes</div>';
@@ -506,21 +520,28 @@
       cuotasHtml += '<div class="cuotas-subtitulo">Cuotas pagadas</div>';
       pag.forEach(function(c) { cuotasHtml += renderCuota(c, true); });
     }
+
     return '<div class="factura-card" id="fc-' + id + '">' +
       '<div class="factura-header" onclick="toggleFactura(\'' + id + '\')">' +
-        '<div class="factura-info"><div class="factura-numero">' + f.factura + '</div>' + prod +
-        '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div></div>' +
-        '<div class="factura-derecha">' + badge + saldoHtml + '</div>' +
+        '<div class="factura-info">' +
+          '<div class="factura-numero">' + f.factura + '</div>' + prod +
+          '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div>' +
+        '</div>' +
+        '<div class="factura-derecha">' +
+          '<div class="factura-badges">' + facturaBadges + '</div>' +
+          saldoHtml +
+        '</div>' +
         '<div class="factura-chevron">⌄</div>' +
       '</div>' +
       '<div class="cuotas-wrap">' + cuotasHtml + '</div>' +
       '</div>';
   }
 
+  // ── RENDER CUOTA ──────────────────────────────────────────────────────────
   function renderCuota(c, pagada) {
     var moraHtml = pagada
       ? '<span class="cuota-mora al-dia">✓ Pagada</span>'
-      : c.mor > 0  ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
+      : c.mor > 0   ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
       : c.mor >= -7 ? '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>'
       : '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
     var saldoHtml = pagada
