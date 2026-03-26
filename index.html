@@ -39,10 +39,18 @@
     .overlay-msg { color: #fff; font-size: 15px; font-weight: 600; }
 
     /* ── HEADER ── */
-    .header { background: var(--primary); padding: 12px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
-    .header-back { color: #fff; font-size: 26px; cursor: pointer; display: none; background: none; border: none; padding: 0 8px 0 0; line-height: 1; flex-shrink: 0; }
-    .header-text { flex: 1; }
-    .header-title { color: #fff; font-size: 17px; font-weight: 700; }
+    .header { background: var(--primary); padding: 12px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
+    .header-back {
+      color: #fff; font-size: 28px; cursor: pointer; display: none;
+      background: rgba(255,255,255,0.15); border: none;
+      width: 44px; height: 44px; border-radius: 12px;
+      flex-shrink: 0; align-items: center; justify-content: center;
+      font-weight: 300; line-height: 1; transition: background 0.15s;
+    }
+    .header-back.visible { display: flex; }
+    .header-back:active { background: rgba(255,255,255,0.3); }
+    .header-text { flex: 1; min-width: 0; }
+    .header-title { color: #fff; font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .header-sub { color: rgba(255,255,255,0.7); font-size: 11px; }
     .header-right { text-align: right; flex-shrink: 0; }
     .header-hora { color: #fff; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -73,6 +81,7 @@
 
     /* ── CONTENT ── */
     .content { padding: 0 16px 32px; }
+    .content.cuenta-view { padding-top: 16px; }
     .estado-msg { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 14px; }
     .estado-msg .icon { font-size: 36px; margin-bottom: 10px; }
     .error-msg { background: var(--danger-light); color: var(--danger); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; }
@@ -95,6 +104,7 @@
     .cliente-item-derecha { text-align: right; flex-shrink: 0; }
     .cliente-item-saldo-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
     .cliente-item-saldo { font-size: 13px; font-weight: 700; color: var(--warning); }
+    .cliente-item-arrow { color: var(--primary); font-size: 20px; flex-shrink: 0; }
 
     /* ── CLIENTE CARD ── */
     .cliente-card { background: var(--primary); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; color: #fff; }
@@ -221,6 +231,7 @@
 
   var pinActual = '';
   var todosLosClientes = [];
+  var enVistaCuenta = false;
 
   // ── RELOJ ────────────────────────────────────────────────────────────────
   function tickReloj() {
@@ -239,10 +250,21 @@
   function iniciarSesion() { sessionStorage.setItem(SESSION_KEY, '1'); }
 
   window.addEventListener('load', function() {
+    // Pushear estado inicial para interceptar botón atrás
+    history.pushState({ vista: 'lista' }, '');
     if (sesionActiva()) {
       document.getElementById('pin-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       cargarInicial();
+    }
+  });
+
+  // ── INTERCEPTAR BOTÓN ATRÁS DEL NAVEGADOR/ANDROID ────────────────────────
+  window.addEventListener('popstate', function(e) {
+    if (enVistaCuenta) {
+      // Volver a lista y pushear estado para mantener historial
+      history.pushState({ vista: 'lista' }, '');
+      volverALista();
     }
   });
 
@@ -353,10 +375,14 @@
   // ── VER CUENTA ───────────────────────────────────────────────────────────
   function verCuenta(ruc, nombre) {
     mostrarOverlay('Cargando estado de cuenta...');
+    enVistaCuenta = true;
+    // Pushear estado para que el botón atrás del navegador funcione
+    history.pushState({ vista: 'cuenta', ruc: ruc, nombre: nombre }, '');
     document.getElementById('headerTitle').textContent = nombre;
-    document.getElementById('btnVolver').style.display = 'block';
+    document.getElementById('btnVolver').classList.add('visible');
     document.getElementById('searchWrap').style.display = 'none';
     document.getElementById('resumen-wrap').style.display = 'none';
+    document.getElementById('content').classList.add('cuenta-view');
     llamarAPI({ accion: 'cuenta', ruc: ruc }, function(data) {
       ocultarOverlay();
       if (data.error) { mostrarError(data.error); return; }
@@ -365,10 +391,12 @@
   }
 
   function volverALista() {
+    enVistaCuenta = false;
     document.getElementById('headerTitle').textContent = 'Cuentas a Cobrar';
-    document.getElementById('btnVolver').style.display = 'none';
+    document.getElementById('btnVolver').classList.remove('visible');
     document.getElementById('searchWrap').style.display = 'block';
     document.getElementById('resumen-wrap').style.display = 'block';
+    document.getElementById('content').classList.remove('cuenta-view');
     document.getElementById('inputBuscar').value = '';
     document.getElementById('btnClear').style.display = 'none';
     renderLista(todosLosClientes);
