@@ -16,7 +16,7 @@
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* PIN */
+    /* ── PIN ── */
     #pin-screen {
       position: fixed; inset: 0; background: var(--primary);
       display: flex; flex-direction: column; align-items: center;
@@ -25,7 +25,7 @@
     .pin-logo { color: #fff; font-size: 22px; font-weight: 700; text-align: center; }
     .pin-logo span { display: block; font-size: 13px; font-weight: 400; opacity: 0.7; margin-top: 4px; }
     .pin-dots { display: flex; gap: 14px; }
-    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); background: transparent; transition: background 0.15s; }
+    .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5); background: transparent; transition: background 0.15s; }
     .pin-dot.filled { background: #fff; border-color: #fff; }
     .pin-error { color: rgba(255,120,120,0.95); font-size: 13px; font-weight: 500; height: 18px; }
     .pin-grid { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
@@ -34,90 +34,66 @@
     .pin-btn.del { font-size: 18px; }
     .pin-btn.empty { border: none; background: transparent; cursor: default; }
 
-    /* OVERLAY */
-    #overlay {
-      position: fixed; inset: 0; z-index: 500;
-      display: none; align-items: center; justify-content: center;
-      flex-direction: column; gap: 14px;
-    }
+    /* ── OVERLAY ── */
+    #overlay { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 14px; }
     #overlay.visible { display: flex; }
-    .overlay-blur {
-      position: absolute; inset: 0;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      background: rgba(10, 20, 60, 0.45);
-    }
-    .overlay-box {
-      position: relative; z-index: 1;
-      display: flex; flex-direction: column; align-items: center; gap: 14px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 18px; padding: 28px 36px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
+    .overlay-blur { position: absolute; inset: 0; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); background: rgba(10,20,60,0.45); }
+    .overlay-box { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 14px; background: rgba(255,255,255,0.12); border-radius: 18px; padding: 28px 36px; border: 1px solid rgba(255,255,255,0.2); }
     .overlay-spinner { width: 44px; height: 44px; border: 4px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
     .overlay-msg { color: #fff; font-size: 15px; font-weight: 600; }
 
-    /* HEADER */
-    .header { background: var(--primary); padding: 18px 20px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
+    /* ── HEADER ── */
+    .header { background: var(--primary); padding: 12px 20px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(24,71,200,0.3); }
     .header-back { color: #fff; font-size: 26px; cursor: pointer; display: none; background: none; border: none; padding: 0 8px 0 0; line-height: 1; flex-shrink: 0; }
+    .header-text { flex: 1; }
     .header-title { color: #fff; font-size: 17px; font-weight: 700; }
-    .header-sub { color: rgba(255,255,255,0.7); font-size: 12px; }
+    .header-sub { color: rgba(255,255,255,0.7); font-size: 11px; }
+    .header-right { text-align: right; flex-shrink: 0; }
+    .header-hora { color: #fff; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .header-actualizado { color: rgba(255,255,255,0.65); font-size: 10px; margin-top: 2px; }
 
     #app { display: none; }
 
-    /* SEARCH */
-    .search-wrap { padding: 20px 16px 12px; }
+    /* ── SEARCH ── */
+    .search-wrap { padding: 16px 16px 8px; }
     .search-box { display: flex; gap: 10px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; align-items: center; box-shadow: var(--shadow); transition: border-color 0.2s; }
     .search-box:focus-within { border-color: var(--primary); }
     .search-box input { flex: 1; border: none; outline: none; font-family: inherit; font-size: 15px; color: var(--text); background: transparent; }
     .search-box input::placeholder { color: var(--text-muted); }
     .btn-clear { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 18px; padding: 0 4px; display: none; line-height: 1; }
 
-    /* DASHBOARD */
-    .dashboard { padding: 0 16px 8px; }
-    .dash-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; }
-    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-    .dash-card { background: var(--surface); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); border: 1.5px solid var(--border); position: relative; }
-    .dash-card.full { grid-column: 1 / -1; }
-    .dash-card-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; padding-right: 22px; }
-    .dash-card-valor { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-    .dash-card-valor.danger { color: var(--danger); }
-    .dash-card-valor.success { color: var(--success); }
-    .dash-card-valor.warning { color: var(--warning); }
-    .progress-wrap { background: var(--border); border-radius: 6px; height: 8px; overflow: hidden; }
-    .progress-bar { height: 100%; border-radius: 6px; transition: width 1s ease; }
-    .progress-bar.success { background: var(--success); }
-    .progress-bar.warning { background: var(--warning); }
-    .progress-bar.danger { background: var(--danger); }
-    .dash-card-sub { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
-    .dash-info-btn { position: absolute; top: 10px; right: 10px; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    /* ── RESUMEN ── */
+    #resumen-wrap { padding: 0 16px 8px; }
+    .resumen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .resumen-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); }
+    .btn-ocultar { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 4px 10px; font-family: inherit; font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+    .resumen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .res-card { background: var(--surface); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); border: 1.5px solid var(--border); }
+    .res-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .res-valor { font-size: 16px; font-weight: 700; color: var(--text); }
+    .res-valor.success { color: var(--success); }
+    .res-valor.danger  { color: var(--danger); }
+    .res-valor.warning { color: var(--warning); }
 
-    /* TOOLTIP */
-    .tooltip-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .tooltip-box { background: var(--surface); border-radius: var(--radius); padding: 20px; max-width: 320px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
-    .tooltip-titulo { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
-    .tooltip-texto { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-    .tooltip-cerrar { margin-top: 16px; width: 100%; padding: 10px; background: var(--primary); color: #fff; border: none; border-radius: 9px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-
-    /* CONTENT */
+    /* ── CONTENT ── */
     .content { padding: 0 16px 32px; }
     .estado-msg { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 14px; }
     .estado-msg .icon { font-size: 36px; margin-bottom: 10px; }
     .error-msg { background: var(--danger-light); color: var(--danger); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; font-weight: 500; margin-top: 8px; }
 
-    /* LISTA */
+    /* ── LISTA ── */
     .lista-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 8px 0 10px; }
-    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; transition: border-color 0.15s; }
+    .cliente-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
     .cliente-item:active { border-color: var(--primary); background: var(--primary-light); }
     .cliente-item-nombre { font-size: 15px; font-weight: 600; color: var(--text); }
-    .cliente-item-ruc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .cliente-item-doc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
     .cliente-item-total { font-size: 12px; color: var(--primary); font-weight: 600; margin-top: 2px; }
     .cliente-item-arrow { color: var(--primary); font-size: 20px; flex-shrink: 0; }
 
-    /* CLIENTE CARD */
+    /* ── CLIENTE CARD ── */
     .cliente-card { background: var(--primary); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; color: #fff; }
     .cliente-nombre { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
-    .cliente-ruc { font-size: 12px; opacity: 0.75; margin-bottom: 4px; }
+    .cliente-doc { font-size: 12px; opacity: 0.75; margin-bottom: 4px; }
     .cliente-total-comprado { font-size: 12px; opacity: 0.85; margin-bottom: 14px; }
     .saldo-global-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.8; margin-bottom: 4px; }
     .saldo-global-monto { font-size: 28px; font-weight: 700; }
@@ -130,7 +106,7 @@
 
     .seccion-titulo { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 20px 0 10px; }
 
-    /* FACTURA */
+    /* ── FACTURA ── */
     .factura-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; border: 1.5px solid var(--border); }
     .factura-header { padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; user-select: none; gap: 10px; }
     .factura-header:active { background: #f8fafc; }
@@ -154,7 +130,7 @@
     .cuota-fecha { font-size: 12px; color: var(--text-muted); }
     .cuota-mora { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
     .cuota-mora.en-mora { background: var(--danger-light); color: var(--danger); }
-    .cuota-mora.al-dia { background: var(--success-light); color: var(--success); }
+    .cuota-mora.al-dia  { background: var(--success-light); color: var(--success); }
     .cuota-mora.proximo { background: var(--warning-light); color: var(--warning); }
     .cuota-der { text-align: right; flex-shrink: 0; }
     .cuota-saldo { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -162,7 +138,6 @@
     .cuota-importe { font-size: 11px; color: var(--text-muted); }
     .historial-toggle { background: none; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 16px; width: 100%; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
-    .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(24,71,200,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -205,40 +180,66 @@
 <div id="app">
   <div class="header">
     <button class="header-back" id="btnVolver" onclick="volverALista()">‹</button>
-    <div>
+    <div class="header-text">
       <div class="header-title" id="headerTitle">Cuentas a Cobrar</div>
       <div class="header-sub">TECH MARKET</div>
+    </div>
+    <div class="header-right">
+      <div class="header-hora" id="headerHora">--:--:--</div>
+      <div class="header-actualizado" id="headerActualizado">Actualizado: --</div>
     </div>
   </div>
 
   <div id="searchWrap" class="search-wrap">
     <div class="search-box">
-      <input type="text" id="inputBuscar" placeholder="Filtrar por nombre o RUC..." autocomplete="off" />
+      <input type="text" id="inputBuscar" placeholder="Filtrar por nombre o documento..." autocomplete="off" />
       <button class="btn-clear" id="btnClear" onclick="limpiarBusqueda()">✕</button>
     </div>
   </div>
 
-  <div id="dashboard" class="dashboard"></div>
+  <div id="resumen-wrap"></div>
+
   <div class="content" id="content">
     <div class="estado-msg"><div class="icon">⏳</div>Cargando lista de clientes...</div>
   </div>
 </div>
 
-<!-- TOOLTIP -->
-<div id="tooltip-overlay" class="tooltip-overlay" style="display:none" onclick="cerrarTooltip()">
-  <div class="tooltip-box" onclick="event.stopPropagation()">
-    <div class="tooltip-titulo" id="tooltip-titulo"></div>
-    <div class="tooltip-texto" id="tooltip-texto"></div>
-    <button class="tooltip-cerrar" onclick="cerrarTooltip()">Entendido</button>
-  </div>
-</div>
-
 <script>
-  const API = 'https://script.google.com/macros/s/AKfycbzZpu0AqlL0q06hlz1oAEzaBiN5B9DjqxOKehjITgZV3muHVyY5QX6anFbGBoSfUoUT/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbxDHuWjRT0Hp3iZjHK_RiCMqjeNtX6q3Rmsiig6asiHQwo-kWgV7A9gi8FxRnY4tf1d/exec';
   const PIN_CORRECTO = '2011';
+  const SESSION_KEY  = 'tm_cuentas_sesion';
+
   var pinActual = '';
   var todosLosClientes = [];
-  var dashboardData = null;
+
+  // ── RELOJ ────────────────────────────────────────────────────────────────
+  function tickReloj() {
+    var ahora = new Date();
+    var h = String(ahora.getHours()).padStart(2,'0');
+    var m = String(ahora.getMinutes()).padStart(2,'0');
+    var s = String(ahora.getSeconds()).padStart(2,'0');
+    var el = document.getElementById('headerHora');
+    if (el) el.textContent = h + ':' + m + ':' + s;
+  }
+  setInterval(tickReloj, 1000);
+  tickReloj();
+
+  // ── SESIÓN (sessionStorage — dura mientras la pestaña esté abierta) ──────
+  function sesionActiva() {
+    return sessionStorage.getItem(SESSION_KEY) === '1';
+  }
+  function iniciarSesion() {
+    sessionStorage.setItem(SESSION_KEY, '1');
+  }
+
+  // ── INICIO ───────────────────────────────────────────────────────────────
+  window.addEventListener('load', function() {
+    if (sesionActiva()) {
+      document.getElementById('pin-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      cargarInicial();
+    }
+  });
 
   // ── PIN ──────────────────────────────────────────────────────────────────
   function pinPress(n) {
@@ -258,6 +259,7 @@
   }
   function verificarPin() {
     if (pinActual === PIN_CORRECTO) {
+      iniciarSesion();
       document.getElementById('pin-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
       cargarInicial();
@@ -277,32 +279,21 @@
     document.getElementById('overlay').classList.remove('visible');
   }
 
-  // ── TOOLTIP ──────────────────────────────────────────────────────────────
-  function mostrarTooltip(titulo, texto) {
-    document.getElementById('tooltip-titulo').textContent = titulo;
-    document.getElementById('tooltip-texto').textContent = texto;
-    document.getElementById('tooltip-overlay').style.display = 'flex';
-  }
-  function cerrarTooltip() {
-    document.getElementById('tooltip-overlay').style.display = 'none';
-  }
-
   // ── API ──────────────────────────────────────────────────────────────────
   function llamarAPI(params, callback) {
     var qs = Object.keys(params).map(function(k) {
       return k + '=' + encodeURIComponent(params[k]);
     }).join('&');
-    var cbName = 'cb_' + Date.now();
+    var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
     var script = document.createElement('script');
     window[cbName] = function(data) {
       delete window[cbName];
-      document.body.removeChild(script);
-      ocultarOverlay();
+      if (script.parentNode) document.body.removeChild(script);
       callback(data);
     };
     script.onerror = function() {
       delete window[cbName];
-      document.body.removeChild(script);
+      if (script.parentNode) document.body.removeChild(script);
       ocultarOverlay();
       mostrarError('Error de conexión. Verificá tu internet.');
     };
@@ -313,13 +304,16 @@
   // ── CARGA INICIAL ────────────────────────────────────────────────────────
   function cargarInicial() {
     mostrarOverlay('Cargando datos...');
-    var dashListo = false, clientesListo = false;
+    var resumenListo = false, clientesListo = false;
 
-    llamarAPI({ accion: 'dashboard' }, function(data) {
-      dashboardData = data;
-      dashListo = true;
-      if (!data.error) renderDashboard(data);
-      if (dashListo && clientesListo) ocultarOverlay();
+    function intentarOcultar() {
+      if (resumenListo && clientesListo) ocultarOverlay();
+    }
+
+    llamarAPI({ accion: 'resumen' }, function(data) {
+      resumenListo = true;
+      if (!data.error) renderResumen(data);
+      intentarOcultar();
     });
 
     llamarAPI({ accion: 'listarClientes' }, function(data) {
@@ -330,7 +324,7 @@
       } else {
         mostrarError(data.error);
       }
-      if (dashListo && clientesListo) ocultarOverlay();
+      intentarOcultar();
     });
   }
 
@@ -338,21 +332,14 @@
   document.getElementById('inputBuscar').addEventListener('input', function() {
     var val = this.value.trim();
     document.getElementById('btnClear').style.display = val ? 'block' : 'none';
-    filtrarLista(val);
-  });
-
-  function filtrarLista(q) {
-    if (!q) {
-      renderLista(todosLosClientes);
-      return;
-    }
-    var qUp = q.toUpperCase();
+    var qUp = val.toUpperCase();
+    if (!val) { renderLista(todosLosClientes); return; }
     var filtrados = todosLosClientes.filter(function(c) {
       return c.nombre.toUpperCase().indexOf(qUp) !== -1 ||
              c.ruc.toUpperCase().indexOf(qUp) !== -1;
     });
     renderLista(filtrados);
-  }
+  });
 
   function limpiarBusqueda() {
     document.getElementById('inputBuscar').value = '';
@@ -367,8 +354,9 @@
     document.getElementById('headerTitle').textContent = nombre;
     document.getElementById('btnVolver').style.display = 'block';
     document.getElementById('searchWrap').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('resumen-wrap').style.display = 'none';
     llamarAPI({ accion: 'cuenta', ruc: ruc }, function(data) {
+      ocultarOverlay();
       if (data.error) { mostrarError(data.error); return; }
       renderCuenta(data);
     });
@@ -378,60 +366,62 @@
     document.getElementById('headerTitle').textContent = 'Cuentas a Cobrar';
     document.getElementById('btnVolver').style.display = 'none';
     document.getElementById('searchWrap').style.display = 'block';
-    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('resumen-wrap').style.display = 'block';
     document.getElementById('inputBuscar').value = '';
     document.getElementById('btnClear').style.display = 'none';
     renderLista(todosLosClientes);
   }
 
-  // ── DASHBOARD ────────────────────────────────────────────────────────────
-  function renderDashboard(d) {
-    var mes = d.mes, mora = d.mora, cartera = d.cartera;
-    var colorMes = mes.porcentaje >= 80 ? 'success' : mes.porcentaje >= 50 ? 'warning' : 'danger';
-    var colorCartera = cartera.porcentaje >= 80 ? 'success' : cartera.porcentaje >= 50 ? 'warning' : 'danger';
+  // ── RESUMEN ──────────────────────────────────────────────────────────────
+  function renderResumen(d) {
+    var oculto = sessionStorage.getItem('tm_resumen_oculto') === '1';
 
-    document.getElementById('dashboard').innerHTML =
-      '<div class="dash-titulo">Resumen de cartera</div>' +
-      '<div class="dash-grid">' +
+    // Fecha actualizado en header
+    if (d.fechaGenerado) {
+      document.getElementById('headerActualizado').textContent = 'Actualizado: ' + d.fechaGenerado;
+    }
 
-      '<div class="dash-card">' +
-        '<button class="dash-info-btn" onclick="mostrarTooltip(\'Cobro del mes\',\'' + escapar(mes.detalle) + '\')">i</button>' +
-        '<div class="dash-card-label">Cobro del mes</div>' +
-        '<div class="dash-card-valor ' + colorMes + '">Gs. ' + fmt(mes.realizado) + '</div>' +
-        '<div class="progress-wrap"><div class="progress-bar ' + colorMes + '" style="width:' + Math.min(mes.porcentaje, 100) + '%"></div></div>' +
-        '<div class="dash-card-sub">' + mes.porcentaje + '% de Gs. ' + fmt(mes.esperado) + ' esperado</div>' +
-      '</div>' +
-
-      '<div class="dash-card">' +
-        '<button class="dash-info-btn" onclick="mostrarTooltip(\'Mora activa\',\'' + escapar(mora.detalle) + '\')">i</button>' +
-        '<div class="dash-card-label">Mora activa</div>' +
-        '<div class="dash-card-valor danger">Gs. ' + fmt(mora.monto) + '</div>' +
-        '<div class="progress-wrap"><div class="progress-bar danger" style="width:' + Math.min(mora.porcentaje, 100) + '%"></div></div>' +
-        '<div class="dash-card-sub">' + mora.porcentaje + '% del cobro esperado</div>' +
-      '</div>' +
-
-      '<div class="dash-card full">' +
-        '<button class="dash-info-btn" onclick="mostrarTooltip(\'Cartera vencida\',\'' + escapar(cartera.detalle) + '\')">i</button>' +
-        '<div class="dash-card-label">Cartera vencida hasta hoy</div>' +
-        '<div class="dash-card-valor ' + colorCartera + '">Gs. ' + fmt(cartera.cobrado) + ' cobrado</div>' +
-        '<div class="progress-wrap"><div class="progress-bar ' + colorCartera + '" style="width:' + Math.min(cartera.porcentaje, 100) + '%"></div></div>' +
-        '<div class="dash-card-sub">' + cartera.porcentaje + '% de Gs. ' + fmt(cartera.esperado) + ' esperado hasta hoy</div>' +
-      '</div>' +
-
+    document.getElementById('resumen-wrap').innerHTML =
+      '<div style="padding:0 16px 8px">' +
+        '<div class="resumen-header">' +
+          '<div class="resumen-titulo">Resumen de cartera</div>' +
+          '<button class="btn-ocultar" onclick="toggleResumen()">' +
+            (oculto ? '▼ Mostrar' : '▲ Ocultar') +
+          '</button>' +
+        '</div>' +
+        '<div id="resumen-body" style="' + (oculto ? 'display:none' : '') + '">' +
+          '<div class="resumen-grid">' +
+            '<div class="res-card"><div class="res-label">Total cartera</div><div class="res-valor">Gs. ' + fmt(d.totalCartera) + '</div></div>' +
+            '<div class="res-card"><div class="res-label">Total cobrado</div><div class="res-valor success">Gs. ' + fmt(d.totalCobrado) + '</div></div>' +
+            '<div class="res-card"><div class="res-label">A cobrar</div><div class="res-valor warning">Gs. ' + fmt(d.totalPendiente) + '</div></div>' +
+            '<div class="res-card"><div class="res-label">Vencidos</div><div class="res-valor danger">Gs. ' + fmt(d.totalVencido) + '</div></div>' +
+          '</div>' +
+        '</div>' +
       '</div>';
   }
 
-  // ── RENDER ───────────────────────────────────────────────────────────────
+  function toggleResumen() {
+    var body  = document.getElementById('resumen-body');
+    var oculto = body.style.display === 'none';
+    body.style.display = oculto ? '' : 'none';
+    sessionStorage.setItem('tm_resumen_oculto', oculto ? '0' : '1');
+    // actualizar texto botón
+    var btn = document.querySelector('.btn-ocultar');
+    if (btn) btn.textContent = oculto ? '▲ Ocultar' : '▼ Mostrar';
+  }
+
+  // ── UTILS ────────────────────────────────────────────────────────────────
+  function fmt(n) { return Number(n).toLocaleString('es-PY'); }
+
+  function tipoDoc(ruc) {
+    return ruc.indexOf('-') !== -1 ? 'RUC' : 'CI';
+  }
+
   function mostrarError(msg) {
     document.getElementById('content').innerHTML = '<div class="error-msg">⚠️ ' + msg + '</div>';
   }
 
-  function fmt(n) { return Number(n).toLocaleString('es-PY'); }
-
-  function escapar(str) {
-    return str.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
-  }
-
+  // ── RENDER LISTA ─────────────────────────────────────────────────────────
   function renderLista(clientes) {
     if (!clientes || clientes.length === 0) {
       document.getElementById('content').innerHTML =
@@ -440,12 +430,13 @@
     }
     var html = '<div class="lista-titulo">' + clientes.length + ' cliente(s)</div>';
     clientes.forEach(function(c) {
-      var rucEsc = c.ruc.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-      var nomEsc = c.nombre.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-      html += '<div class="cliente-item" onclick="verCuenta(\'' + rucEsc + '\',\'' + nomEsc + '\')">' +
+      var re = c.ruc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var ne = c.nombre.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      var tipo = tipoDoc(c.ruc);
+      html += '<div class="cliente-item" onclick="verCuenta(\'' + re + '\',\'' + ne + '\')">' +
         '<div>' +
           '<div class="cliente-item-nombre">' + c.nombre + '</div>' +
-          '<div class="cliente-item-ruc">RUC: ' + c.ruc + '</div>' +
+          '<div class="cliente-item-doc">' + tipo + ': ' + c.ruc + '</div>' +
           '<div class="cliente-item-total">Total comprado: Gs. ' + fmt(c.totalComprado) + '</div>' +
         '</div>' +
         '<div class="cliente-item-arrow">›</div>' +
@@ -454,10 +445,11 @@
     document.getElementById('content').innerHTML = html;
   }
 
+  // ── RENDER CUENTA ─────────────────────────────────────────────────────────
   function renderCuenta(data) {
     var pendientes = data.facturas.filter(function(f) { return f.estado === 'PENDIENTE'; });
-    var pagadas = data.facturas.filter(function(f) { return f.estado === 'PAGADO'; });
-    var hayMora = pendientes.some(function(f) {
+    var pagadas    = data.facturas.filter(function(f) { return f.estado === 'PAGADO'; });
+    var hayMora    = pendientes.some(function(f) {
       return f.cuotas.some(function(c) { return c.mor > 0 && c.saldo > 0; });
     });
     var badge = data.saldoGlobal === 0
@@ -465,9 +457,10 @@
       : hayMora ? '<span class="badge badge-mora">⚠ En mora</span>'
       : '<span class="badge badge-pendiente">Saldo pendiente</span>';
 
+    var tipo = tipoDoc(data.ruc);
     var html = '<div class="cliente-card">' +
       '<div class="cliente-nombre">' + data.nombre + '</div>' +
-      '<div class="cliente-ruc">RUC: ' + data.ruc + '</div>' +
+      '<div class="cliente-doc">' + tipo + ': ' + data.ruc + '</div>' +
       '<div class="cliente-total-comprado">Total comprado: Gs. ' + fmt(data.totalComprado) + '</div>' +
       badge +
       '<div style="height:10px"></div>' +
@@ -494,7 +487,7 @@
       ? '<div class="factura-producto">' + f.producto + '</div>'
       : '<div class="factura-producto sin-producto">Sin descripción</div>';
     var pend = f.cuotas.filter(function(c) { return c.saldo > 0; });
-    var pag = f.cuotas.filter(function(c) { return c.saldo === 0; });
+    var pag  = f.cuotas.filter(function(c) { return c.saldo === 0; });
     var mora = pend.some(function(c) { return c.mor > 0; });
     var badge = f.estado === 'PAGADO'
       ? '<span class="badge badge-pagado">Pagado</span>'
@@ -516,7 +509,7 @@
     return '<div class="factura-card" id="fc-' + id + '">' +
       '<div class="factura-header" onclick="toggleFactura(\'' + id + '\')">' +
         '<div class="factura-info"><div class="factura-numero">' + f.factura + '</div>' + prod +
-          '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div></div>' +
+        '<div class="factura-meta">Fecha: ' + f.fecha + ' · ' + f.moneda + '</div></div>' +
         '<div class="factura-derecha">' + badge + saldoHtml + '</div>' +
         '<div class="factura-chevron">⌄</div>' +
       '</div>' +
@@ -527,7 +520,7 @@
   function renderCuota(c, pagada) {
     var moraHtml = pagada
       ? '<span class="cuota-mora al-dia">✓ Pagada</span>'
-      : c.mor > 0 ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
+      : c.mor > 0  ? '<span class="cuota-mora en-mora">⚠ ' + c.mor + ' días mora</span>'
       : c.mor >= -7 ? '<span class="cuota-mora proximo">Vence en ' + Math.abs(c.mor) + ' días</span>'
       : '<span class="cuota-mora al-dia">Vence ' + c.venc + '</span>';
     var saldoHtml = pagada
